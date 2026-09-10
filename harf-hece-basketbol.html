@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Harf ve Hece Bilgisi Basketbol Yarışı</title>
+<style>
+:root{--ink:#20304b;--blue:#2678c9;--red:#df4f6d;--orange:#f28b27;--cream:#fff8e8}
+*{box-sizing:border-box}body{margin:0;font-family:ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif;color:var(--ink);background:linear-gradient(145deg,#dff4ff,#fff2cf 55%,#e9e3ff);min-height:100vh}button{font:inherit}.shell{width:min(1180px,calc(100% - 24px));margin:auto;padding:15px 0 30px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-weight:950;font-size:clamp(17px,3vw,25px)}.back{border:2px solid #cbd8e9;background:#fff;border-radius:14px;padding:10px 14px;color:#364b69;text-decoration:none;font-weight:900}.hero{text-align:center;margin:18px auto 13px}.hero h1{margin:4px 0;color:#7037a5;font-size:clamp(28px,5vw,48px)}.hero p{margin:6px auto;max-width:800px;line-height:1.45}.rules{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.rules span{background:#fff;border-radius:999px;padding:7px 11px;font-weight:850;font-size:14px}.start{text-align:center;background:#fff;border:3px solid #e3d7f2;border-radius:26px;padding:28px;max-width:800px;margin:24px auto;box-shadow:0 10px 25px #3a527522}.starticon{font-size:72px}.startbtn,.again{border:0;border-radius:16px;background:#7048c8;color:#fff;padding:14px 24px;font-weight:950;font-size:19px;cursor:pointer}.game{display:none}.game.on{display:block}.scoreboard{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;background:#263f73;color:#fff;padding:12px;border-radius:20px;margin:14px 0}.score{text-align:center;font-weight:900}.score b{display:block;font-size:34px;color:#ffd54a}.clock{font-size:30px}.courts{display:grid;grid-template-columns:1fr 1fr;gap:16px}.player{background:#fff;border:4px solid var(--pc);border-radius:25px;overflow:hidden;box-shadow:0 9px 0 color-mix(in srgb,var(--pc) 28%,transparent)}.court{height:116px;background:linear-gradient(#e99a48,#d8792c);position:relative;border-bottom:5px solid #a75321;overflow:hidden}.court:before{content:"";position:absolute;left:50%;top:0;height:100%;border-left:3px solid #fff7}.hoop{position:absolute;right:18px;top:22px;font-size:58px}.ball{position:absolute;left:16px;bottom:13px;font-size:37px;transition:none}.ball.shoot{animation:shoot .7s ease-in-out}@keyframes shoot{0%{left:16px;bottom:13px;transform:rotate(0)}55%{left:62%;bottom:68px;transform:rotate(250deg)}100%{left:calc(100% - 65px);bottom:25px;transform:rotate(480deg)}}.content{padding:16px}.playerhead{display:flex;justify-content:space-between;align-items:center;gap:8px}.player h2{margin:0;color:var(--pc);font-size:20px}.round{background:#edf2f8;border-radius:99px;padding:6px 10px;font-weight:900;font-size:13px}.question{font-size:clamp(19px,2.8vw,27px);font-weight:950;line-height:1.3;text-align:center;min-height:72px;display:grid;place-items:center;margin:12px 0}.answers{display:grid;grid-template-columns:1fr 1fr;gap:9px}.answer{min-height:57px;border:3px solid #d5dfec;border-radius:15px;background:#fff;font-weight:900;color:var(--ink);padding:8px;cursor:pointer;touch-action:manipulation}.answer:hover:not(:disabled){border-color:var(--pc);background:#f4f8ff}.answer.good{background:#dff8e9;border-color:#35b776}.answer.bad{background:#ffe4e4;border-color:#ef6666}.status{text-align:center;min-height:28px;margin-top:10px;font-weight:900}.finished .content{background:#f1fff1}.result{display:none;text-align:center;background:#fff;border:4px solid #f0b93b;border-radius:26px;padding:24px;margin:20px auto;max-width:760px}.result.on{display:block}.result h2{font-size:32px;margin:5px}.compare{display:flex;justify-content:center;gap:35px;margin:15px}.compare b{font-size:40px;display:block;color:#7048c8}.compare small{font-weight:850}.note{font-size:13px;color:#66758a;text-align:center;margin-top:16px}@media(max-width:760px){.courts{grid-template-columns:1fr}.scoreboard{position:sticky;top:4px;z-index:5}.question{min-height:auto}.court{height:95px}.hoop{font-size:50px}.answers{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body><main class="shell">
+<header class="top"><div class="brand">🏀 Dila Öğretmen'in Oyun Atölyesi</div><a class="back" href="./">← Türkçe Oyunları</a></header>
+<section class="hero"><h1>Harf ve Hece Basketbol Yarışı</h1><p>İki oyuncu aynı 15 soruyu kendi hızında çözer. Her doğru cevap bir basket kazandırır; en çok basket atan maçı kazanır.</p><div class="rules"><span>🔤 Harf bilgisi</span><span>👏 Hece bilgisi</span><span>✅ Doğru = 1 basket</span><span>⏱️ Beklemek yok</span></div></section>
+<section class="start" id="startScreen"><div class="starticon">🏀⛹️</div><h2>Sahaya çıkmaya hazır mısınız?</h2><p>Her oyuncunun soru ve cevap alanı ayrıdır. Bir oyuncu düşünürken diğeri yeni sorusuna geçebilir.</p><button class="startbtn" id="startBtn">Maçı Başlat 🏆</button></section>
+<section class="game" id="game">
+<div class="scoreboard"><div class="score">🔵 1. Oyuncu<b id="score1">0</b>basket</div><div class="clock">🏀</div><div class="score">🔴 2. Oyuncu<b id="score2">0</b>basket</div></div>
+<div class="courts">
+<article class="player" style="--pc:var(--blue)"><div class="court"><span class="ball" id="ball1">🏀</span><span class="hoop">🗑️</span></div><div class="content"><div class="playerhead"><h2>🔵 1. Oyuncu</h2><span class="round" id="round1">Soru 1 / 15</span></div><div class="question" id="question1"></div><div class="answers" id="answers1"></div><div class="status" id="status1"></div></div></article>
+<article class="player" style="--pc:var(--red)"><div class="court"><span class="ball" id="ball2">🏀</span><span class="hoop">🗑️</span></div><div class="content"><div class="playerhead"><h2>🔴 2. Oyuncu</h2><span class="round" id="round2">Soru 1 / 15</span></div><div class="question" id="question2"></div><div class="answers" id="answers2"></div><div class="status" id="status2"></div></div></article>
+</div></section>
+<section class="result" id="result"></section><div class="note">İki oyuncu aynı soru dizisini bağımsız olarak tamamlar.</div>
+</main>
+<script>
+const bank=[
+ {q:'“Kalem” kelimesinde kaç harf vardır?',a:'5',o:['4','5','6','7']},
+ {q:'Türk alfabesinde kaç harf vardır?',a:'29',o:['26','28','29','30']},
+ {q:'Hangisi ünlü bir harftir?',a:'ö',o:['k','m','ö','ş']},
+ {q:'Hangisi ünsüz bir harftir?',a:'ç',o:['a','e','ü','ç']},
+ {q:'“Kelebek” kelimesinde kaç ünlü harf vardır?',a:'3',o:['2','3','4','5']},
+ {q:'Alfabetik sırada “g” harfinden sonra hangisi gelir?',a:'ğ',o:['h','f','ğ','ı']},
+ {q:'“Oyuncak” kelimesinin ilk harfi hangisidir?',a:'o',o:['y','o','a','k']},
+ {q:'“Okul” kelimesi kaç hecelidir?',a:'2',o:['1','2','3','4']},
+ {q:'“Öğretmen” kelimesi kaç hecelidir?',a:'3',o:['2','3','4','5']},
+ {q:'“Arkadaşlık” kelimesi kaç hecelidir?',a:'4',o:['2','3','4','5']},
+ {q:'“Kitaplık” kelimesi hangisinde doğru hecelenmiştir?',a:'ki-tap-lık',o:['kit-ap-lık','ki-ta-plık','ki-tap-lık','kitap-lık']},
+ {q:'“İlkokul” kelimesi hangisinde doğru hecelenmiştir?',a:'il-ko-kul',o:['ilk-o-kul','il-ko-kul','il-kok-ul','ilkok-ul']},
+ {q:'Her hecede kaç ünlü harf bulunur?',a:'1',o:['0','1','2','3']},
+ {q:'“Bilgisayar” kelimesi kaç hecelidir?',a:'4',o:['3','4','5','6']},
+ {q:'“o-yun-cak” heceleri birleşince hangi kelime oluşur?',a:'oyuncak',o:['oyun','oyuncu','oyuncak','oynak']}
+];
+let questions=[],idx=[0,0],scores=[0,0],answered=[false,false],finished=[false,false];
+const $=s=>document.querySelector(s);
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function start(){
+ questions=shuffle(bank);idx=[0,0];scores=[0,0];answered=[false,false];finished=[false,false];
+ $('#score1').textContent=$('#score2').textContent='0';$('#result').classList.remove('on');$('#startScreen').style.display='none';$('#game').classList.add('on');
+ document.querySelectorAll('.player').forEach(x=>x.classList.remove('finished'));render(0);render(1);scrollTo({top:0,behavior:'smooth'});
+}
+function render(p){
+ if(idx[p]>=15){finishPlayer(p);return}
+ const n=p+1,q=questions[idx[p]],opts=shuffle(q.o),box=$('#answers'+n);answered[p]=false;
+ $('#round'+n).textContent='Soru '+(idx[p]+1)+' / 15';$('#question'+n).textContent=q.q;$('#status'+n).textContent='Cevabını seç';
+ box.innerHTML=opts.map(x=>'<button class="answer">'+x+'</button>').join('');
+ [...box.children].forEach((b,i)=>b.onclick=()=>choose(p,b,opts[i],q.a));
+}
+function choose(p,btn,value,right){
+ if(answered[p]||finished[p])return;answered[p]=true;const n=p+1,box=$('#answers'+n);
+ [...box.children].forEach(b=>{b.disabled=true;if(b.textContent===right)b.classList.add('good')});
+ if(value===right){scores[p]++;$('#score'+n).textContent=scores[p];btn.classList.add('good');$('#status'+n).textContent='🏀 Basket! Yeni soru geliyor.';const ball=$('#ball'+n);ball.classList.remove('shoot');void ball.offsetWidth;ball.classList.add('shoot')}
+ else{btn.classList.add('bad');$('#status'+n).textContent='💡 Basket yok. Doğru cevap: '+right}
+ setTimeout(()=>{idx[p]++;render(p)},800);
+}
+function finishPlayer(p){
+ if(finished[p])return;finished[p]=true;const n=p+1;$('#answers'+n).innerHTML='';$('#round'+n).textContent='15 / 15 tamamlandı';$('#question'+n).textContent='Maçını tamamladın!';$('#status'+n).textContent=finished[1-p]?'Sonuç hazırlanıyor…':'Diğer oyuncu devam ediyor.';$('#answers'+n).closest('.player').classList.add('finished');
+ if(finished[0]&&finished[1])finishGame();
+}
+function finishGame(){
+ const winner=scores[0]===scores[1]?-1:scores[0]>scores[1]?0:1,title=winner<0?'🤝 Maç Berabere!':winner===0?'🔵 1. Oyuncu Kazandı!':'🔴 2. Oyuncu Kazandı!';
+ $('#result').classList.add('on');$('#result').innerHTML='<div style="font-size:58px">🏆🏀</div><h2>'+title+'</h2><div class="compare"><div><b>'+scores[0]+'</b><small>1. Oyuncu basket</small></div><div><b>'+scores[1]+'</b><small>2. Oyuncu basket</small></div></div><button class="again" id="again">Tekrar Maç Yap</button>';
+ $('#again').onclick=start;$('#result').scrollIntoView({behavior:'smooth',block:'center'});
+}
+$('#startBtn').onclick=start;
+</script></body></html>
