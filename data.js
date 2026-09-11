@@ -370,3 +370,53 @@ G.tarihyazim.q.push(...[["Tarihin doğru yazıldığı seçeneği bul.","📅","
  G.turadi.q=nouns.map((w,n)=>['Hangisi tür adıdır?','Aynı türdeki bütün varlıkları karşılayan adı seç.',w,four(w,[proper[n%100],proper[(n+31)%100],proper[(n+67)%100]])]);
  G.ozelad.q=proper.map((w,n)=>['Hangisi özel addır?','Tek bir varlığa verilen adı seç.',w,four(w,[nouns[n%100],nouns[(n+27)%100],nouns[(n+63)%100]])]);
 })();
+
+
+/* Noktalama İşaretleri: dokuz oyun için 100 soruluk havuz */
+(()=>{
+ const names=['Ali','Ayşe','Ece','Emir','Elif','Mert','Zeynep','Arda','Defne','Kerem','Ceren','Ömer','Sude','Berk','İpek','Can','Selin','Yağız','Melek','Eren'];
+ const statements=[];
+ const preds=['okula gitti','kitap okudu','resim yaptı','bahçede oynadı','erken uyandı'];
+ names.forEach(n=>preds.forEach(p=>statements.push(n+' '+p)));
+ const punctOpts=(base,correct)=>{const all=[base+'.',base+'?',base+'!',base+','];return [base+correct,...all.filter(x=>x!==base+correct)].slice(0,4)};
+ G.nokta.q=statements.map(s=>['Cümlenin doğru tamamlanışını seç.',s+' ?',s+'.',punctOpts(s,'.')]);
+
+ const nouns=['elma','armut','muz','kiraz','kalem','silgi','defter','cetvel','kitap','çanta','masa','sandalye','koltuk','dolap','yatak','kedi','köpek','tavşan','kuş','balık','gül','lale','papatya','menekşe','ağaç','araba','otobüs','tren','gemi','uçak','ekmek','peynir','zeytin','yumurta','süt','kazak','etek','çorap','şapka','eldiven','doktor','öğretmen','terzi','aşçı','çiftçi','futbol','yüzme','tenis','basketbol','voleybol','kırmızı','mavi','sarı','yeşil','mor','sevinç','üzüntü','korku','şaşkınlık','heyecan','ilkbahar','yaz','sonbahar','kış','mevsim','yağmur','kar','rüzgâr','dolu','sis','sabah','öğle','akşam','gece','hafta','tabak','kaşık','çatal','bardak','tencere','orman','deniz','dağ','göl','nehir','telefon','mektup','radyo','bilgisayar','televizyon','piyano','keman','davul','flüt','gitar','arı','kelebek','zürafa','aslan','fil'];
+ G.virgul.q=nouns.map((w,n)=>{const a=[w,nouns[(n+19)%100],nouns[(n+43)%100]],ans=a.join(', ');return ['Eş görevli kelimelerin doğru yazıldığı seçeneği bul.',a.join(' • '),ans,[ans,a.join('. '),a.join(' '),a.join(': ')]]});
+
+ const questions=[];
+ const qpred=[n=>n+' bugün okula geldi mi',n=>n+' nerede oturuyor',n=>n+' hangi kitabı okudu',n=>n+' ne zaman gelecek',n=>n+' neden güldü'];
+ names.forEach(n=>qpred.forEach(f=>questions.push(f(n))));
+ G.soruisareti.q=questions.map(s=>['Soru cümlesinin doğru yazılışını seç.',s+' ?',s+'?',punctOpts(s,'?')]);
+
+ const exclaims=[];
+ const epred=[n=>'Yaşasın, '+n+' kazandı',n=>'Aferin '+n,n=>'Eyvah, '+n+' düştü',n=>'Hey, '+n+' buraya gel',n=>'Ne güzel güldün '+n];
+ names.forEach(n=>epred.forEach(f=>exclaims.push(f(n))));
+ G.unlem.q=exclaims.map(s=>['Güçlü duygu bildiren cümlenin doğru yazılışını seç.',s+' ?',s+'!',punctOpts(s,'!')]);
+
+ const proper=G.ozelad.q.slice(0,100).map(x=>x[2]);
+ const lv=w=>[...w.toLocaleLowerCase('tr-TR')].reverse().find(c=>'aeıioöuü'.includes(c));
+ const gen=w=>({a:'ın',ı:'ın',e:'in',i:'in',o:'un',u:'un',ö:'ün',ü:'ün'}[lv(w)]);
+ const genitive=w=>w+'’'+(/[aeıioöuü]$/i.test(w)?'n':'')+gen(w);
+ G.kesme.q=proper.map(w=>{const ans=genitive(w),plain=ans.replace('’','');return ['Özel ada gelen ekin doğru yazılışını seç.',w+' + ilgi eki',ans,[ans,plain,w+'-'+gen(w),w.toLocaleLowerCase('tr-TR')+'’'+gen(w)]]});
+
+ const syllables=G.heceayir.q.slice(0,100).map(x=>[x[1],x[2]]);
+ G.kisacizgi.q=syllables.map(([w,s])=>['Kelimenin kısa çizgiyle doğru hecelenişini seç.',w,s,[s,[...w].join('-'),w.slice(0,1)+'-'+w.slice(1),w.slice(0,-1)+'-'+w.slice(-1)]].map(x=>x));
+ G.kisacizgi.q=G.kisacizgi.q.map(q=>{let opts=[...new Set(q[3])];while(opts.length<4)opts.push(q[2]+'-'.repeat(opts.length));q[3]=opts.slice(0,4);return q});
+
+ G.uzuncizgi.q=questions.map(s=>{const ans='— '+s+'?';return ['Konuşma çizgisinin doğru kullanıldığı seçeneği bul.',s,ans,[ans,'- '+s+'?',s+'?','—'+s+'?']]});
+
+ const cats=[
+ ['Meyveler',['elma','armut','muz','kiraz']],['Sebzeler',['havuç','patates','domates','ıspanak']],['Ders araçları',['kalem','silgi','defter','cetvel']],['Taşıtlar',['araba','otobüs','tren','gemi']],
+ ['Hayvanlar',['kedi','köpek','tavşan','kuş']],['Renkler',['kırmızı','mavi','sarı','yeşil']],['Mevsimler',['ilkbahar','yaz','sonbahar','kış']],['Duygular',['sevinç','üzüntü','korku','şaşkınlık']],
+ ['Giysiler',['kazak','etek','çorap','şapka']],['Meslekler',['doktor','öğretmen','terzi','aşçı']],['Sporlar',['futbol','yüzme','tenis','basketbol']],['İçecekler',['su','süt','ayran','limonata']],
+ ['Çiçekler',['gül','lale','papatya','menekşe']],['Müzik aletleri',['piyano','keman','davul','flüt']],['Mutfak eşyaları',['tabak','kaşık','bardak','tencere']],['Doğal varlıklar',['orman','deniz','dağ','göl']],
+ ['İletişim araçları',['telefon','mektup','radyo','bilgisayar']],['Hava olayları',['yağmur','kar','rüzgâr','dolu']],['Öğünler',['kahvaltı','öğle yemeği','akşam yemeği','ara öğün']],['Zamanlar',['sabah','öğle','akşam','gece']]
+ ];
+ const colon=[];
+ cats.forEach(([cat,a])=>{for(let k=0;k<5;k++){const b=k===4?[...a]:[a[k%4],a[(k+1)%4],a[(k+2)%4]],ans=cat+': '+b.join(', ')+'.';colon.push(['Açıklama ve örneklerden önce iki noktanın doğru kullanıldığı seçeneği bul.',cat+' → '+b.join(', '),ans,[ans,cat+'. '+b.join(', ')+'.',cat+', '+b.join(', ')+'.',cat+'; '+b.join(', ')+'.']])}});
+ G.ikinokta.q=colon;
+
+ const utterances=[...statements.map(s=>s+'.'),...questions.map(s=>s+'?')].slice(0,100);
+ G.tirnak.q=utterances.map((s,n)=>{const speaker=names[n%20],ans=speaker+', “'+s+'” dedi.';return ['Aktarılan sözün tırnak içinde doğru yazıldığı seçeneği bul.',speaker+' şöyle dedi: '+s,ans,[ans,speaker+', '+s+' dedi.','“'+speaker+', '+s+'” dedi.',speaker+', ‘'+s+' dedi.’']]});
+})();
