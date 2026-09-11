@@ -214,3 +214,78 @@ G.tarihyazim.q.push(...[["Tarihin doğru yazıldığı seçeneği bul.","📅","
   G.hecesayisi.q=syllables.map(([w,s])=>{const n=s.split('-').length;const opts=n===1?[1,2,3,4]:n===2?[2,1,3,4]:n===3?[3,2,4,1]:[4,3,5,2];return ['“'+w+'” kelimesi kaç hecelidir?',w,n,opts]});
   G.heceayir.q=syllables.map(([w,s])=>['“'+w+'” kelimesi hecelerine nasıl ayrılır?',w,s,choice(s,wrongCuts(w,s))]);
 })();
+
+
+/* Kelime Bilgisi 1: her oyun için 100 soruluk havuz */
+(()=>{
+ const pickOpts=(items,n,answer)=>[answer,items[(n+17)%items.length],items[(n+41)%items.length],items[(n+73)%items.length]].filter((x,k,a)=>a.indexOf(x)===k).slice(0,4);
+ const syllableItems=G.heceayir.q.slice(0,100).map(x=>[x[1],x[2]]);
+ const syllableWords=syllableItems.map(x=>x[0]);
+ G.heceden.q=syllableItems.map(([word,cut],n)=>{
+   const shown=cut.split('-').join(' + ');
+   return ['“'+shown+'” hecelerinden hangi kelime oluşur?',shown,word,pickOpts(syllableWords,n,word)];
+ });
+
+ const categories=[
+ ['meyveler','🍎',['elma','armut','muz','portakal']],['sebzeler','🥕',['havuç','patates','domates','ıspanak']],
+ ['hayvanlar','🐾',['kedi','köpek','tavşan','zürafa']],['kuşlar','🐦',['serçe','leylek','güvercin','kartal']],
+ ['taşıtlar','🚗',['araba','otobüs','tren','bisiklet']],['meslekler','👩‍🏫',['öğretmen','doktor','terzi','aşçı']],
+ ['okul araçları','🎒',['kalem','silgi','defter','cetvel']],['giysiler','👕',['kazak','pantolon','etek','çorap']],
+ ['renkler','🎨',['kırmızı','mavi','sarı','yeşil']],['duygular','😊',['sevinç','üzüntü','korku','şaşkınlık']],
+ ['mevsimler','🌦️',['ilkbahar','yaz','sonbahar','kış']],['hava olayları','🌤️',['yağmur','kar','rüzgâr','dolu']],
+ ['ev eşyaları','🏠',['koltuk','masa','dolap','yatak']],['mutfak eşyaları','🍽️',['tabak','kaşık','tencere','bardak']],
+ ['oyuncaklar','🧸',['top','bebek','uçurtma','yapboz']],['sporlar','⚽',['futbol','yüzme','basketbol','tenis']],
+ ['çiçekler','🌸',['lale','gül','papatya','menekşe']],['ağaçlar','🌳',['çam','çınar','meşe','söğüt']],
+ ['içecekler','🥛',['su','süt','ayran','limonata']],['yiyecekler','🍲',['çorba','pilav','makarna','ekmek']],
+ ['vücudumuz','🧍',['el','kol','baş','ayak']],['doğa','🏞️',['orman','deniz','dağ','göl']],
+ ['iletişim araçları','📱',['telefon','mektup','bilgisayar','radyo']],['müzik aletleri','🎵',['piyano','keman','davul','flüt']],
+ ['zaman','⏰',['sabah','öğle','akşam','gece']]
+ ];
+ const pairs=categories.flatMap(([cat,icon,members])=>members.map(member=>({cat,icon,member})));
+ const members=pairs.map(x=>x.member), cats=categories.map(x=>x[0]);
+ G.cagrisim.q=pairs.map((x,n)=>['“'+x.cat+'” denince hangisi akla gelir?',x.icon,x.member,pickOpts(members,n,x.member)]);
+ G.harita.q=pairs.map((x,n)=>['“'+x.cat+'” kelime haritasına hangisi eklenir?',x.cat+' → ?',x.member,pickOpts(members,n,x.member)]);
+
+ const visuals=[
+ ['🍎','elma'],['🍐','armut'],['🍌','muz'],['🍊','portakal'],['🍋','limon'],['🍉','karpuz'],['🍇','üzüm'],['🍓','çilek'],['🍒','kiraz'],['🍑','şeftali'],
+ ['🥕','havuç'],['🥔','patates'],['🍅','domates'],['🌽','mısır'],['🥒','salatalık'],['🐈','kedi'],['🐕','köpek'],['🐇','tavşan'],['🐢','kaplumbağa'],['🐟','balık'],
+ ['🐦','kuş'],['🦋','kelebek'],['🐝','arı'],['🐞','uğur böceği'],['🦆','ördek'],['🦁','aslan'],['🐘','fil'],['🦒','zürafa'],['🐒','maymun'],['🐎','at'],
+ ['🚗','araba'],['🚌','otobüs'],['🚲','bisiklet'],['🚂','tren'],['✈️','uçak'],['🚢','gemi'],['🚁','helikopter'],['🚕','taksi'],['🚑','ambulans'],['🚒','itfaiye aracı'],
+ ['✏️','kalem'],['📕','kitap'],['📓','defter'],['📏','cetvel'],['🎒','çanta'],['✂️','makas'],['🖍️','boya kalemi'],['🧮','abaküs'],['🖊️','tükenmez kalem'],['📌','raptiye'],
+ ['👕','tişört'],['👖','pantolon'],['👗','elbise'],['🧦','çorap'],['👟','ayakkabı'],['🧢','şapka'],['🧤','eldiven'],['🧣','atkı'],['🥾','bot'],['☂️','şemsiye'],
+ ['🏠','ev'],['🏫','okul'],['🏥','hastane'],['🏪','market'],['🏦','banka'],['🌳','ağaç'],['🌷','lale'],['🌹','gül'],['🌻','ayçiçeği'],['🌈','gökkuşağı'],
+ ['☀️','güneş'],['🌙','ay'],['⭐','yıldız'],['☁️','bulut'],['❄️','kar'],['🌧️','yağmur'],['⚡','şimşek'],['🌊','dalga'],['🔥','ateş'],['⛄','kardan adam'],
+ ['⚽','futbol topu'],['🏀','basketbol topu'],['🎾','tenis topu'],['🏐','voleybol topu'],['🧸','oyuncak ayı'],['🪁','uçurtma'],['🎈','balon'],['🎁','hediye'],['🎂','pasta'],['🎵','müzik'],
+ ['🥛','süt'],['🍞','ekmek'],['🧀','peynir'],['🥚','yumurta'],['🍚','pilav'],['🍲','çorba'],['🍦','dondurma'],['🍪','kurabiye'],['🧁','kek'],['🍯','bal']
+ ];
+ const labels=visuals.map(x=>x[1]);
+ G.kelimegorsel.q=visuals.map(([icon,label],n)=>['Bu görselin adı nedir?',icon,label,pickOpts(labels,n,label)]);
+ const sentence=s=>'Görselde '+(s.endsWith('ı')||s.endsWith('i')||s.endsWith('u')||s.endsWith('ü')?'bir ':'bir ')+s+' var.';
+ const sentences=labels.map(sentence);
+ G.gorselanlat.q=visuals.map(([icon,label],n)=>['Görsele uygun cümleyi seç.',icon,sentence(label),pickOpts(sentences,n,sentence(label))]);
+
+ const meanings=[
+ ['cesur','Korkmadan davranan'],['misafir','Bir yere konuk olarak gelen kişi'],['özenli','Dikkatli ve titiz'],['anı','Geçmişte yaşanan olayın hatırası'],['yolculuk','Bir yerden başka bir yere gitme'],
+ ['cömert','Elindekini paylaşmayı seven'],['sabırlı','Beklemeyi bilen'],['dürüst','Doğruyu söyleyen'],['neşeli','Sevinçli ve canlı'],['üzgün','Kederli olan'],
+ ['meraklı','Öğrenmek isteyen'],['çalışkan','Çalışmayı seven'],['tembel','Çalışmaktan kaçınan'],['nazik','Kibar davranan'],['yardımsever','Başkalarına yardım eden'],
+ ['dost','Sevilen ve güvenilen arkadaş'],['komşu','Yakında oturan kişi'],['akraba','Aile bağı bulunan kişi'],['öğrenci','Okulda öğrenim gören kişi'],['öğretmen','Bilgi ve beceri öğreten kişi'],
+ ['doktor','Hastaları iyileştirmeye çalışan kişi'],['çiftçi','Toprağı ekip ürün yetiştiren kişi'],['terzi','Giysi diken kişi'],['aşçı','Yemek yapan kişi'],['şoför','Taşıt kullanan kişi'],
+ ['kütüphane','Kitapların bulunduğu ve okunduğu yer'],['hastane','Hastaların tedavi edildiği yer'],['eczane','İlaç satılan yer'],['manav','Meyve ve sebze satılan yer'],['fırın','Ekmek yapılan ve satılan yer'],
+ ['orman','Çok sayıda ağacın bulunduğu yer'],['ada','Çevresi sularla kaplı kara parçası'],['göl','Karayla çevrili su birikintisi'],['dağ','Çevresine göre çok yüksek yer'],['ova','Geniş ve düz arazi'],
+ ['nehir','Büyük akarsu'],['kıyı','Kara ile suyun birleştiği yer'],['vadi','İki dağ arasındaki çukur alan'],['tepe','Çevresinden yüksek küçük yer'],['mağara','Kayaların içindeki doğal boşluk'],
+ ['ilkbahar','Doğanın canlandığı mevsim'],['yaz','Yılın en sıcak mevsimi'],['sonbahar','Yaprakların sararıp döküldüğü mevsim'],['kış','Yılın en soğuk mevsimi'],['rüzgâr','Havanın hareket etmesi'],
+ ['yağmur','Bulutlardan su damlalarının düşmesi'],['kar','Donmuş su tanelerinin yağması'],['dolu','Buz taneleri biçimindeki yağış'],['sis','Görüşü azaltan yere yakın bulut'],['şimşek','Bulutlar arasında görülen ışık'],
+ ['sabah','Günün güneş doğduktan sonraki ilk bölümü'],['öğle','Günün ortası'],['akşam','Güneşin battığı zaman'],['gece','Güneş battıktan sonraki karanlık süre'],['hafta','Yedi günlük süre'],
+ ['ay','Yaklaşık otuz günlük zaman dilimi'],['yıl','On iki aylık süre'],['dün','Bugünden önceki gün'],['yarın','Bugünden sonraki gün'],['takvim','Günleri ve ayları gösteren çizelge'],
+ ['soru','Cevap almak için söylenen söz'],['cevap','Bir soruya verilen karşılık'],['cümle','Duygu veya düşünce anlatan söz dizisi'],['kelime','Anlamı olan ses ya da ses topluluğu'],['hece','Bir solukta söylenen ses topluluğu'],
+ ['başlık','Bir yazının adını bildiren söz'],['öykü','Yaşanmış ya da yaşanabilecek olayları anlatan kısa yazı'],['şiir','Duyguları dizelerle anlatan yazı'],['masal','Olağanüstü olayların anlatıldığı hayal ürünü yazı'],['sözlük','Kelimelerin anlamlarını açıklayan kitap'],
+ ['mutlu','Sevinç duyan'],['kızgın','Öfkeli olan'],['şaşkın','Beklenmedik bir durum karşısında hayrete düşen'],['korkmuş','Tehlike karşısında kaygı duyan'],['heyecanlı','Güçlü bir coşku duyan'],
+ ['sessiz','Çok az ses olan'],['gürültülü','Çok ve rahatsız edici ses olan'],['aydınlık','Işıklı olan'],['karanlık','Işığı olmayan'],['temiz','Kirli olmayan'],
+ ['kalabalık','Çok sayıda insan bulunan'],['ıssız','Kimse bulunmayan'],['geniş','Eni büyük olan'],['dar','Eni az olan'],['derin','Dibi yüzeyden uzak olan'],
+ ['hızlı','Kısa sürede hareket eden'],['yavaş','Ağır hareket eden'],['sağlam','Kolay bozulmayan veya kırılmayan'],['kırılgan','Kolayca kırılabilen'],['değerli','Önemli veya kıymetli olan'],
+ ['tasarruf','Kaynakları dikkatli kullanma'],['çevre','Canlıların yaşadığı ortam'],['doğa','İnsan eliyle yapılmamış varlıkların bütünü'],['görev','Yapılması gereken iş'],['sorumluluk','Üstlenilen görevi yerine getirme'],
+ ['kural','Uyulması gereken davranış'],['güvenli','Tehlikesi olmayan'],['sağlıklı','Bedeni ve zihni iyi durumda olan'],['barış','Kavga ve savaşın olmadığı durum'],['özgürlük','Başkalarına zarar vermeden istediğini yapabilme']
+ ];
+ const defs=meanings.map(x=>x[1]);
+ G.anlam.q=meanings.map(([word,def],n)=>['“'+word+'” kelimesinin anlamı hangisidir?',word,def,pickOpts(defs,n,def)]);
+})();
