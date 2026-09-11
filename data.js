@@ -343,3 +343,30 @@ G.tarihyazim.q.push(...[["Tarihin doğru yazıldığı seçeneği bul.","📅","
    return ['“'+word+'” kelimesi satır sonunda nasıl ayrılabilir?',word,answer,opts];
  });
 })();
+
+
+/* Ad–İsim Bilgisi: her oyun için 100 soruluk havuz */
+(()=>{
+ const nouns=[
+ 'ağaç','aile','akşam','arkadaş','ayna','balık','bardak','bayrak','bebek','bisiklet','bulut','ceviz','çanta','çilek','çiçek','çocuk','çorap','davul','defter','deniz',
+ 'doktor','dolap','dondurma','ekmek','eldiven','elma','erik','fare','fındık','fırça','filiz','gazete','gemi','gölge','gözlük','güneş','halı','havuç','havuz','horoz',
+ 'ırmak','ışık','ıspanak','incir','inek','iplik','istasyon','kalem','kapı','kedi','kelebek','kiraz','kitap','koltuk','köprü','kutu','lale','leylek','limon','lokanta',
+ 'makas','mandalina','masa','merdiven','müzik','okul','orman','otobüs','oyuncak','öğrenci','ördek','papatya','patates','pencere','radyo','resim','robot','salata','simit','sokak',
+ 'şehir','şemsiye','tabak','tahta','tarak','telefon','uçak','uçurtma','üzüm','vapur','vazo','vişne','yağmur','yaprak','yıldız','zambak','zürafa','tavşan','sandalye','portakal'
+ ];
+ const proper=[
+ 'Ahmet','Ali','Arda','Ayşe','Berk','Can','Ceren','Defne','Deniz','Dila','Ece','Elif','Emir','Eren','Esra','Fatma','Gökçe','Hakan','İpek','Kerem','Melek','Mert','Nehir','Okan','Ömer','Selin','Sude','Yağız','Zeynep','Mustafa',
+ 'Adana','Ankara','Antalya','Artvin','Aydın','Balıkesir','Bolu','Bursa','Çanakkale','Denizli','Diyarbakır','Edirne','Erzurum','Eskişehir','Gaziantep','Giresun','Hatay','Isparta','İstanbul','İzmir','Kayseri','Kocaeli','Konya','Malatya','Manisa','Mardin','Mersin','Muğla','Samsun','Trabzon',
+ 'Türkiye','Almanya','Azerbaycan','Fransa','İspanya','İtalya','Japonya','Kanada','Mısır','Norveç','Pakistan','Portekiz','Romanya','Yunanistan','Brezilya',
+ 'Akdeniz','Karadeniz','Ege Denizi','Marmara Denizi','Ağrı Dağı','Erciyes Dağı','Sakarya Nehri','Kızılırmak','Van Gölü','Tuz Gölü','Toroslar','Boğaziçi','Kapadokya','Anadolu','Avrupa',
+ 'Cumhuriyet Bayramı','Zafer Bayramı','Çocuk Bayramı','Gençlik ve Spor Bayramı','Türk Dil Kurumu','Türkiye Büyük Millet Meclisi','Atatürk İlkokulu','Kızılay','Yeşilay','İstiklal Marşı'
+ ];
+ const lastVowel=w=>[...w.toLocaleLowerCase('tr-TR')].reverse().find(c=>'aeıioöuü'.includes(c));
+ const plural=w=>'aıou'.includes(lastVowel(w))?w+'lar':w+'ler';
+ const unique=(a)=>[...new Set(a)];
+ function four(answer,cands){let out=unique([answer,...cands]);let k=0;while(out.length<4)out.push('seçenek '+(++k));return out.slice(0,4)}
+ G.tekil.q=nouns.map((w,n)=>['Hangisi tekil addır?','Tek bir varlığı bildiren adı seç.',w,four(w,[plural(nouns[(n+17)%100]),plural(nouns[(n+43)%100]),plural(nouns[(n+71)%100])])]);
+ G.cogul.q=nouns.map((w,n)=>{const answer=plural(w),other=plural(nouns[(n+29)%100]);return ['“'+w+'” adının çoğulu hangisidir?',w+' + çokluk eki',answer,four(answer,[w,w+'lar',w+'ler',other]).slice(0,4)]});
+ G.turadi.q=nouns.map((w,n)=>['Hangisi tür adıdır?','Aynı türdeki bütün varlıkları karşılayan adı seç.',w,four(w,[proper[n%100],proper[(n+31)%100],proper[(n+67)%100]])]);
+ G.ozelad.q=proper.map((w,n)=>['Hangisi özel addır?','Tek bir varlığa verilen adı seç.',w,four(w,[nouns[n%100],nouns[(n+27)%100],nouns[(n+63)%100]])]);
+})();
