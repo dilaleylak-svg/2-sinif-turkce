@@ -289,3 +289,57 @@ G.tarihyazim.q.push(...[["Tarihin doğru yazıldığı seçeneği bul.","📅","
  const defs=meanings.map(x=>x[1]);
  G.anlam.q=meanings.map(([word,def],n)=>['“'+word+'” kelimesinin anlamı hangisidir?',word,def,pickOpts(defs,n,def)]);
 })();
+
+
+/* Kelime Bilgisi 2: her oyun için 100 soruluk havuz */
+(()=>{
+ const words=[
+ 'ağaç','aile','akşam','arkadaş','ayna','balık','bardak','bayrak','bebek','bisiklet','bulut','ceviz','çanta','çilek','çiçek','çocuk','çorap','davul','defter','deniz',
+ 'doktor','dolap','dondurma','ekmek','eldiven','elma','erik','fare','fındık','fırça','filiz','gazete','gemi','gökkuşağı','gölge','gözlük','güneş','halı','havuç','havuz',
+ 'horoz','ırmak','ışık','ıspanak','incir','inek','iplik','istasyon','kalem','kapı','kedi','kelebek','kiraz','kitap','koltuk','köprü','kutu','lale','leylek','limon',
+ 'lokanta','makas','mandalina','masa','merdiven','müzik','nar','okul','orman','otobüs','oyuncak','öğrenci','ördek','papatya','patates','pencere','radyo','resim','robot','saat',
+ 'salata','simit','sokak','şehir','şemsiye','tabak','tahta','tarak','telefon','uçak','uçurtma','uğur','üzüm','vapur','vazo','vişne','yağmur','yaprak','yıldız','zambak'
+ ];
+ function misspellings(w){
+   const a=[...w], set=new Set();
+   if(a.length>2){let b=[...a];[b[1],b[2]]=[b[2],b[1]];set.add(b.join(''))}
+   if(a.length>2)set.add(a.slice(0,-1).join(''));
+   set.add(a[0]+a.join(''));
+   set.add(a.join('')+'ğ');
+   if(a.includes('i'))set.add(a.join('').replace('i','ı'));else if(a.includes('ı'))set.add(a.join('').replace('ı','i'));else set.add(a.join('')+'i');
+   set.delete(w); while(set.size<3)set.add(w+'x'.repeat(set.size+1));
+   return [...set].slice(0,3);
+ }
+ G.dogruyazim.q=words.map(w=>['Hangisi doğru yazılmıştır?','Doğru kelimeyi bul.',w,[w,...misspellings(w)]]);
+
+ const helpers=['ve','ile','ama','fakat','çünkü','veya','ise','için','gibi','kadar','göre','ancak'];
+ G.anlamli.q=words.map((w,n)=>{
+   const opts=[w,helpers[n%helpers.length],helpers[(n+4)%helpers.length],helpers[(n+8)%helpers.length]];
+   return ['Hangisi tek başına anlamlı bir kelimedir?','Anlamlı kelimeyi seç.',w,opts];
+ });
+
+ const trSort=a=>[...a].sort((x,y)=>x.localeCompare(y,'tr'));
+ G.alfabetik.q=words.map((w,n)=>{
+   const opts=[w,words[(n+23)%100],words[(n+47)%100],words[(n+71)%100]];
+   const sorted=trSort(opts), answer=sorted[0];
+   return ['Alfabetik sırada önce gelen kelime hangisidir?',opts.join(' • '),answer,opts];
+ });
+
+ const syllableItems=G.heceayir.q.slice(0,100).map(x=>[x[1],x[2]]);
+ function lineAnswers(word,split){
+   const parts=split.split('-');
+   if(parts.length===1)return ['Ayrılamaz',word.slice(0,1)+'- / '+word.slice(1),word.slice(0,-1)+'- / '+word.slice(-1),'Her yerinden ayrılır'];
+   const right=parts[0]+'- / '+parts.slice(1).join('');
+   const chars=[...word], wrong=[];
+   for(let k=1;k<chars.length&&wrong.length<3;k++){
+     const x=chars.slice(0,k).join('')+'- / '+chars.slice(k).join('');
+     if(x!==right&&!wrong.includes(x))wrong.push(x);
+   }
+   while(wrong.length<3)wrong.push('Ayrılamaz'+wrong.length);
+   return [right,...wrong.slice(0,3)];
+ }
+ G.satirsonu.q=syllableItems.map(([word,split])=>{
+   const opts=lineAnswers(word,split),answer=opts[0];
+   return ['“'+word+'” kelimesi satır sonunda nasıl ayrılabilir?',word,answer,opts];
+ });
+})();
