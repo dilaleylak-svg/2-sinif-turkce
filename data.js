@@ -703,3 +703,48 @@ G.tarihyazim.q.push(...[["Tarihin doğru yazıldığı seçeneği bul.","📅","
  G.siirsoru.q=R.map((r,n)=>{const p=poems[n%10],answer=p[0].split('\\n')[0],card='Şiir: '+r.title+' • '+r.name+' • '+r.time+'\\n'+p[0];return ['Şiirin ilk dizesi hangisidir?',card,answer,opts(answer,poems.map(x=>x[0].split('\\n')[0]),n)]});
  G.hayalyaz.q=R.map((r,n)=>{const a=r.name+' '+fantasy[n%10]+'.',card=r.name+' için hayal kartı: '+r.title+' • '+r.time;return ['Hangisi hayal ürünü bir cümledir?',card,a,[a,sentSafe(r),r.name+' okula yürüdü.',r.name+' kahvaltı yaptı.']]});
 })();
+
+
+/* Yazım Kuralları: beş oyun için 100 soruluk tekrarsız havuz */
+(()=>{
+ const proper=G.ozelad.q.slice(0,100).map(x=>x[2]);
+ function capError(s){const a=[...s];for(let i=1;i<a.length;i++){if(/[a-zçğıöşü]/.test(a[i])){a[i]=a[i].toLocaleUpperCase('tr-TR');break}}return a.join('')}
+ G.ozeladyazim.q=proper.map(p=>{const correct=p+' hakkında yeni bir bilgi öğrendik.',lower=p.toLocaleLowerCase('tr-TR')+' hakkında yeni bir bilgi öğrendik.';return ['Özel adın doğru yazıldığı cümleyi seç.',p,correct,[correct,lower,capError(lower),p.toLocaleUpperCase('tr-TR')+' Hakkında yeni bir bilgi öğrendik.']]});
+
+ const months=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+ const dates=Array.from({length:100},(_,n)=>{const day=1+(n*7)%28,month=months[(n*5+Math.floor(n/12))%12],year=2020+(n%7);return day+' '+month+' '+year});
+ G.tarihyazim.q=dates.map(d=>{const parts=d.split(' '),low=parts[0]+' '+parts[1].toLocaleLowerCase('tr-TR')+' '+parts[2],odd=parts[0]+' '+parts[1][0].toLocaleLowerCase('tr-TR')+parts[1].slice(1).toLocaleUpperCase('tr-TR')+' '+parts[2];return ['Belirli tarihin doğru yazılışını seç.',d,d,[d,low,odd,parts[0]+' '+parts[1].toLocaleUpperCase('tr-TR')+' '+parts[2]]]});
+
+ const names=['Ali','Ayşe','Ece','Emir','Elif','Mert','Zeynep','Arda','Defne','Kerem','Ceren','Ömer','Sude','Berk','İpek','Can','Selin','Yağız','Melek','Eren'];
+ const predicates=[
+ ['bugün okula gelecek','mi'],['ödevini tamamladı','mı'],['kitabı okudu','mu'],['bizi gördü','mü'],['yarışmaya hazır','mı'],
+ ['bu resmi beğendi','mi'],['sütünü içti','mi'],['topu buldu','mu'],['üzgün görünüyor','mü'],['şemsiyesini aldı','mı'],
+ ['erken uyandı','mı'],['parka gidecek','mi'],['masalı dinledi','mi'],['yemeğini bitirdi','mi'],['soruyu çözdü','mü'],
+ ['kalemini getirdi','mi'],['çiçekleri suladı','mı'],['oyuna katıldı','mı'],['otobüse yetişti','mi'],['mutlu oldu','mu']
+ ];
+ const ask=[];
+ for(let n=0;n<100;n++){const name=names[n%20],x=predicates[(n*7+Math.floor(n/20))%20],correct=name+' '+x[0]+' '+x[1]+'?';ask.push([correct,x[1]])}
+ G.sorueki.q=ask.map(([correct,particle],n)=>{const joined=correct.replace(' '+particle+'?',particle+'?'),wrong=correct.replace(' '+particle+'?',' '+({mi:'mı',mı:'mu',mu:'mü',mü:'mi'}[particle])+'?'),bare=correct.slice(0,-1);return ['Soru ekinin ayrı ve doğru yazıldığı cümleyi seç.',correct.replace(particle,'...'),correct,[correct,joined,wrong,bare]]});
+
+ const abbr=[
+ ['Türkiye Cumhuriyeti','T.C.'],['doktor','Dr.'],['metre','m'],['kilogram','kg'],['litre','L'],['santimetre','cm'],['milimetre','mm'],['kilometre','km'],['gram','g'],['saat','sa.'],
+ ['dakika','dk.'],['saniye','sn.'],['profesör','Prof.'],['doçent','Doç.'],['mahalle','Mah.'],['sokak','Sok.'],['cadde','Cad.'],['apartman','Apt.'],['numara','No.'],['Türk Dil Kurumu','TDK'],
+ ['Türkiye Büyük Millet Meclisi','TBMM'],['Millî Eğitim Bakanlığı','MEB'],['Türk lirası','TL'],['kuzey','K'],['güney','G'],['doğu','D'],['batı','B'],['pazartesi','Pzt.'],['salı','Sal.'],['çarşamba','Çar.'],
+ ['perşembe','Per.'],['cuma','Cum.'],['cumartesi','Cmt.'],['pazar','Paz.'],['ocak','Oca.'],['şubat','Şub.'],['mart','Mar.'],['nisan','Nis.'],['mayıs','May.'],['haziran','Haz.'],
+ ['temmuz','Tem.'],['ağustos','Ağu.'],['eylül','Eyl.'],['ekim','Eki.'],['kasım','Kas.'],['aralık','Ara.'],['ve benzeri','vb.'],['örneğin','ör.'],['bakınız','bk.'],['sayfa','s.']
+ ];
+ function choices(answer,pool,n){let out=[answer];for(let k=1;out.length<4;k++){const x=pool[(n+k*13)%pool.length];if(x!==answer&&!out.includes(x))out.push(x)}return out}
+ const fulls=abbr.map(x=>x[0]),shorts=abbr.map(x=>x[1]);
+ G.kisaltma.q=abbr.flatMap(([full,short],n)=>[
+  ['“'+full+'” sözünün doğru kısaltması hangisidir?',full,short,choices(short,shorts,n)],
+  ['“'+short+'” kısaltmasının açılımı hangisidir?',short,full,choices(full,fulls,n)]
+ ]);
+
+ const sentencePool=G.cumleyaz.q.slice(0,100).map(x=>x[2]);
+ G.buyukharf.q=sentencePool.map((s,n)=>{
+   let correct=n%2===0?s:proper[n]+' hakkında sınıfta konuştuk.';
+   let lower=correct[0].toLocaleLowerCase('tr-TR')+correct.slice(1);
+   let inner=capError(lower);
+   return ['Büyük harflerin doğru kullanıldığı cümleyi seç.',correct.slice(0,-1),correct,[correct,lower,inner,correct.toLocaleUpperCase('tr-TR')]];
+ });
+})();
