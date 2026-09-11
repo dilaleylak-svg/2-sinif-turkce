@@ -596,3 +596,110 @@ G.tarihyazim.q.push(...[["Tarihin doğru yazıldığı seçeneği bul.","📅","
  const simAns=similes.map(x=>x[1]);
  G.benzetme.q=rec.map((r,n)=>{const x=similes[n%20],who=names[(n+Math.floor(n/20)*3)%20];return ['Cümlede '+who+' neye benzetilmiştir?',who+' '+x[0]+'dır.',x[1],[x[1],simAns[(n+5)%20],simAns[(n+11)%20],simAns[(n+16)%20]]]});
 })();
+
+
+/* Okuma–Anlama: 30 oyun için içerik duyarlı 100 soruluk havuzlar */
+(()=>{
+ const names=['Ali','Ayşe','Ece','Emir','Elif','Mert','Zeynep','Arda','Defne','Kerem','Ceren','Ömer','Sude','Berk','İpek','Can','Selin','Yağız','Melek','Eren'];
+ const times=['dün sabah','bugün öğleden sonra','geçen hafta','cumartesi günü'];
+ const S=[
+ ['kütüphaneye','doğa kitabı','doğa kitabını dikkatle okudu','merak ettiği hayvanları öğrendi','Kitapların Dünyası','📚🦋','Okumak yeni bilgiler kazandırır.'],
+ ['parka','yaralı kuş','yaralı bir kuş bulup ona su verdi','kuş kısa süre sonra canlandı','Yaralı Kuş','🌳🐦','Canlılara yardım etmeliyiz.'],
+ ['okul bahçesine','fasulye tohumu','fasulye tohumunu toprağa ekti','birkaç gün sonra küçük bir filiz çıktı','Küçük Tohum','🌱🪴','Emek verirsek güzel sonuçlar alırız.'],
+ ['mutfağa','elmalı kek','annesine yardım ederek elmalı kek yaptı','ailesi keki birlikte afiyetle yedi','Mutfaktaki Yardımcı','🍎🧁','Yardımlaşmak işleri kolaylaştırır.'],
+ ['müzeye','eski oyuncaklar','eski oyuncakların bulunduğu bölümü gezdi','geçmişteki çocukların oyunlarını öğrendi','Oyuncak Müzesi','🏛️🧸','Geçmişi öğrenmek ilgi çekicidir.'],
+ ['sahile','plastik şişeler','kıyıdaki plastik şişeleri topladı','sahil daha temiz bir yer oldu','Temiz Sahil','🌊♻️','Çevremizi temiz tutmalıyız.'],
+ ['ormana','çam kozalakları','yere düşen kozalakları inceledi','kozalakların içindeki tohumları fark etti','Orman Gezisi','🌲🔍','Doğayı gözlemleyerek öğrenebiliriz.'],
+ ['hayvan barınağına','yavru köpek','yavru köpeğe mama ve su verdi','köpek sevinçle kuyruğunu salladı','Barınaktaki Dost','🐶🥣','Hayvanların bakımına destek olmalıyız.'],
+ ['bilim merkezine','mıknatıs','mıknatısla küçük bir deney yaptı','hangi maddelerin çekildiğini keşfetti','Mıknatıs Deneyi','🧲🔬','Deney yapmak merakımızı geliştirir.'],
+ ['pazara','yerli meyveler','mevsiminde yetişen meyveleri seçti','sağlıklı bir meyve tabağı hazırladı','Renkli Meyveler','🍎🍐','Sağlıklı besinleri seçmeliyiz.'],
+ ['otobüs durağına','yaşlı yolcu','otobüste yaşlı yolcuya yer verdi','yolcu ona gülümseyerek teşekkür etti','Otobüste Nezaket','🚌💺','Büyüklere karşı saygılı olmalıyız.'],
+ ['oyun parkına','kaybolan cüzdan','bankın altında bir cüzdan buldu','cüzdanı görevliye teslim etti','Bulunan Cüzdan','👛✅','Bulduğumuz eşyayı sahibine ulaştırmalıyız.'],
+ ['köydeki bahçeye','olgun domatesler','olgun domatesleri dikkatle topladı','domatesleri komşularıyla paylaştı','Bahçe Bereketi','🍅🧺','Paylaşmak mutluluğu artırır.'],
+ ['göl kenarına','ördekler','ördekleri sessizce gözlemledi','onları ürkütmeden fotoğraflarını çekti','Gölün Misafirleri','🦆📷','Canlıları rahatsız etmeden gözlemlemeliyiz.'],
+ ['okulun spor salonuna','basketbol topu','takımıyla düzenli antrenman yaptı','turnuvada uyum içinde oynadılar','Takım Ruhu','🏀🤝','Birlikte çalışmak başarıyı kolaylaştırır.'],
+ ['dedesiyle atölyeye','kırık sandalye','kırık sandalyeyi birlikte onardı','eski sandalye yeniden kullanılabilir oldu','Eskiye Yeni Şans','🪑🔨','Eşyaları hemen atmak yerine onarabiliriz.'],
+ ['trafik eğitim parkına','yaya geçidi','yaya geçidini kullanmayı öğrendi','karşıdan karşıya güvenle geçti','Güvenli Yol','🚸🚦','Trafik kurallarına uymalıyız.'],
+ ['okul laboratuvarına','buz parçaları','buz parçalarını farklı kaplara koydu','sıcak yerdeki buzun önce eridiğini gördü','Eriyen Buzlar','🧊🌡️','Gözlem yaparak sonuç çıkarabiliriz.'],
+ ['tiyatro salonuna','çocuk oyunu','arkadaşlarıyla bir çocuk oyunu izledi','oyundaki dostluk mesajını çok beğendi','Perde Açılıyor','🎭👏','Sanat bize farklı duygular düşündürür.'],
+ ['geri dönüşüm merkezine','atık kâğıtlar','atık kâğıtların dönüşümünü izledi','eski kâğıtların yeniden kullanılabildiğini öğrendi','Kâğıdın Yolculuğu','📄♻️','Atıkları ayrıştırmak doğayı korur.'],
+ ['arı kovanlarının yanına','bal arıları','koruyucu başlıkla arıları gözlemledi','arıların çiçeklerden nektar topladığını öğrendi','Çalışkan Arılar','🐝🍯','Her canlının doğada önemli bir görevi vardır.'],
+ ['planetaryuma','gezegenler','gökyüzü gösterisini dikkatle izledi','Dünya’nın Güneş çevresinde döndüğünü öğrendi','Uzay Yolculuğu','🪐🚀','Evreni araştırmak merakımızı artırır.'],
+ ['itfaiye merkezine','yangın aracı','itfaiyecilerin çalışmalarını dinledi','acil durumda 112’yi araması gerektiğini öğrendi','Cesur İtfaiyeciler','🚒🧯','Acil durumlarda doğru kişilerden yardım istemeliyiz.'],
+ ['seramik atölyesine','kil parçası','kil parçasına elleriyle şekil verdi','küçük bir kuş heykeli yaptı','Kilden Kuş','🏺🐦','Hayal gücümüzle yeni ürünler oluşturabiliriz.'],
+ ['şehir parkına','renkli uçurtma','rüzgârı bekleyip uçurtmasını gökyüzüne bıraktı','uçurtma bulutlara doğru yükseldi','Gökyüzündeki Uçurtma','🪁☁️','Sabırla doğru zamanı beklemek önemlidir.']
+ ];
+ const R=Array.from({length:100},(_,n)=>{const x=S[n%25];return{name:names[n%20],time:times[Math.floor(n/25)],place:x[0],item:x[1],action:x[2],result:x[3],title:x[4],visual:x[5],lesson:x[6]}});
+ const textOf=r=>r.name+' '+r.time+' '+r.place+' gitti. Orada '+r.action+'. Böylece '+r.result+'.';
+ function opts(answer,pool,n){let out=[answer];for(let k=1;out.length<4&&k<pool.length+5;k++){const x=pool[(n+k*17)%pool.length];if(x!==answer&&!out.includes(x))out.push(x)}return out}
+ const namesP=R.map(r=>r.name),places=R.map(r=>r.place),items=R.map(r=>r.item),actions=R.map(r=>r.action),results=R.map(r=>r.result),titles=R.map(r=>r.title),visuals=S.map(x=>x[5]),lessons=S.map(x=>x[6]),texts=R.map(textOf);
+ G.metinkim.q=R.map((r,n)=>['Metindeki olayın kahramanı kimdir?',textOf(r),r.name,opts(r.name,names,n)]);
+ G.hikayeunsur.q=R.map((r,n)=>{const k=n%3,a=k===0?r.name:k===1?r.place:r.time,p=k===0?names:k===1?places:times;return ['Metne göre '+(k===0?'olayı yaşayan kişi':k===1?'olayın geçtiği yer':'olayın zamanı')+' hangisidir?',textOf(r),a,opts(a,p,n)]});
+ G.hikayeharita.q=R.map((r,n)=>['Hikâye haritasındaki “sonuç” bölümüne ne yazılmalıdır?',textOf(r),r.result,opts(r.result,results,n)]);
+ G.olayolusus.q=R.map((r,n)=>['Metinde önce ne olmuştur?',textOf(r),r.name+' '+r.place+' gitti.',opts(r.name+' '+r.place+' gitti.',[r.action+'.',r.result+'.',...actions.map(x=>x+'.')],n)]);
+ G.olaylari.q=R.map((r,n)=>{const a=r.place+' gitti → '+r.action+' → '+r.result;return ['Olayların doğru sıralandığı seçeneği bul.',textOf(r),a,[a,r.action+' → '+r.place+' gitti → '+r.result,r.result+' → '+r.action+' → '+r.place+' gitti',r.place+' gitti → '+r.result+' → '+r.action]]});
+ G.metnegorsel.q=R.map((r,n)=>['Metne en uygun görsel hangisidir?',textOf(r),r.visual,opts(r.visual,visuals,n)]);
+ G.metinyorum.q=R.map((r,n)=>['Bu metinden çıkarılabilecek düşünce hangisidir?',textOf(r),r.lesson,opts(r.lesson,lessons,n)]);
+ G.gorselyorum.q=R.map((r,n)=>['Görselin anlattığı olay hangisidir?',r.visual,r.action,opts(r.action,actions,n)]);
+ G.gorselbaslik.q=R.map((r,n)=>['Görsele en uygun başlığı seç.',r.visual,r.title,opts(r.title,titles,n)]);
+ G.gorselmetin.q=R.map((r,n)=>['Görsele uygun kısa metni seç.',r.visual,textOf(r),opts(textOf(r),texts,n)]);
+
+ const recipients=R.map((r,n)=>names[(n+7)%20]);
+ G.mektup.q=R.map((r,n)=>{const m='Sevgili '+recipients[n]+',\\n'+r.time+' '+r.place+' gidip '+r.action+'. Bu güzel günü seninle paylaşmak istedim.\\nSevgiler, '+r.name;const a=n%2===0?r.name:recipients[n];return [n%2===0?'Mektubu yazan kimdir?':'Mektup kime yazılmıştır?',m,a,opts(a,n%2===0?names:recipients,n)]});
+ G.gunluk.q=R.map((r,n)=>{const m=r.time+'\\nSevgili Günlük,\\n'+r.place+' gittim. '+r.action[0].toLocaleUpperCase('tr-TR')+r.action.slice(1)+'. '+r.result[0].toLocaleUpperCase('tr-TR')+r.result.slice(1)+'.';return ['Günlükte anlatılan temel olay hangisidir?',m,r.action,opts(r.action,actions,n)]});
+ const achievements=['yarışmayı kazanman','kitabı bitirmen','güzel resim yapman','takımına yardım etmen','şiiri ezberlemen','fidan dikmen','odanı toplaman','dostuna destek olman','projeni tamamlaman','kurallara uyman'];
+ G.tebrik.q=R.map((r,n)=>{const a=achievements[n%10],card='Sevgili '+recipients[n]+', '+a+' nedeniyle seni kutlarım. Başarılarının devamını dilerim. '+r.name;return ['Tebrik kartı hangi amaçla yazılmıştır?',card,a,opts(a,achievements,n)]});
+ const safe=[
+ ['Tanımadığı kişiden bağlantı geldi','Bağlantıyı açmadan bir büyüğüne söylemeli'],['Bir site adresini sordu','Ev adresini paylaşmamalı'],['Şifresini isteyen ileti aldı','Şifresini kimseyle paylaşmamalı'],['Kaba bir ileti gördü','Yanıt vermeden öğretmenine bildirmeli'],['Tanımadığı biri fotoğraf istedi','Fotoğraf göndermemeli'],
+ ['Ödül kazandığını söyleyen pencere açıldı','Pencereye tıklamamalı'],['Arkadaşı izin vermeden fotoğrafını paylaştı','Fotoğrafın kaldırılmasını istemeli'],['Ortak bilgisayarda hesabını açtı','İşi bitince hesabından çıkmalı'],['Yeni bir uygulama indirmek istedi','Önce ailesinden izin almalı'],['Ekranda rahatsız edici içerik gördü','Ekranı kapatıp güvendiği yetişkine söylemeli']
+ ];
+ G.eposta.q=R.map((r,n)=>{const x=safe[n%10],m=r.name+' bilgisayarda şu durumla karşılaştı: '+x[0]+'.';return ['Bu durumda en güvenli davranış hangisidir?',m,x[1],opts(x[1],safe.map(x=>x[1]),n)]});
+
+ const emotions=[
+ ['gülümsüyor ve ellerini çırpıyor','Mutlu'],['başını öne eğmiş, gözleri dolmuş','Üzgün'],['kaşlarını çatmış, kollarını bağlamış','Kızgın'],['gözlerini açmış, ağzı aralanmış','Şaşkın'],['elleri titriyor, geriye çekiliyor','Korkmuş'],
+ ['sırasını sessizce bekliyor','Sabırlı'],['parmak kaldırıp dikkatle dinliyor','İlgili'],['arkadaşına sarılıyor','Sevecen'],['omuzları düşük biçimde oturuyor','Yorgun'],['sahneye çıkmadan derin nefes alıyor','Heyecanlı']
+ ];
+ const emoAns=emotions.map(x=>x[1]);
+ G.bedendili.q=R.map((r,n)=>{const e=emotions[n%10];return ['Beden dili hangi durumu anlatıyor?',r.name+' '+e[0]+'.',e[1],opts(e[1],emoAns,n)]});
+ G.duygu.q=R.map((r,n)=>{const e=emotions[(n+3)%10];return ['Cümledeki kişinin duygusunu seç.',r.name+' '+e[0]+'.',e[1],opts(e[1],emoAns,n)]});
+ const symbols=[['🚸','Yaya geçidi'],['🚭','Sigara içilmez'],['♻️','Geri dönüşüm'],['⚠️','Dikkat'],['🚑','Sağlık yardımı'],['🚒','İtfaiye'],['📚','Kütüphane'],['🏥','Hastane'],['🏫','Okul'],['🚻','Tuvalet'],['⬆️','Yukarı yön'],['⬇️','Aşağı yön'],['➡️','Sağ yön'],['⬅️','Sol yön'],['🛑','Dur'],['🔕','Sessiz olun'],['🗑️','Çöp kutusu'],['🚲','Bisiklet yolu'],['🅿️','Park yeri'],['♿','Erişilebilir alan']];
+ G.sembol.q=R.map((r,n)=>{const x=symbols[n%20];return ['Sembolün anlamı nedir?',x[0],x[1],opts(x[1],symbols.map(x=>x[1]),n)]});
+ G.grafik.q=R.map((r,n)=>{const a=2+n%7,b=3+(n*2)%7,c=1+(n*3)%7,d=4+(n*4)%7,vals=[['Pazartesi',a],['Salı',b],['Çarşamba',c],['Perşembe',d]],max=[...vals].sort((x,y)=>y[1]-x[1])[0];const vis=vals.map(x=>x[0]+': '+'■'.repeat(x[1])).join('\\n');return ['Grafiğe göre en çok kitap okunan gün hangisidir?',vis,max[0],opts(max[0],vals.map(x=>x[0]),n)]});
+ const types=[['“Bir varmış bir yokmuş, konuşan bir ağaç varmış.”','Masal'],['“Sevgili arkadaşım, seni çok özledim.”','Mektup'],['“Bugün okul gezisinde çok eğlendim.”','Günlük'],['“Minik kuş yuvasını aramak için yola çıktı.”','Öykü'],['“Yağmur yağar şıpır şıpır, çiçek açar kıpır kıpır.”','Şiir']];
+ G.metinturu.q=R.map((r,n)=>{const x=types[n%5],sample=x[0]+' ('+r.name+')';return ['Bu metnin türü hangisidir?',sample,x[1],opts(x[1],types.map(x=>x[1]),n)]});
+ G.konu.q=R.map((r,n)=>['Metnin konusu hangisidir?',textOf(r),r.title,opts(r.title,titles,n)]);
+
+ G.metintamam.q=R.map((r,n)=>['Metni en uygun cümleyle tamamla.',r.name+' '+r.time+' '+r.place+' gitti. Orada '+r.action+'. ...',r.result+'.',opts(r.result+'.',results.map(x=>x+'.'),n)]);
+ G.konubaslik.q=R.map((r,n)=>['Metne en uygun başlığı seç.',textOf(r),r.title,opts(r.title,titles,n)]);
+ G.anadusunce.q=R.map((r,n)=>['Metnin ana düşüncesi hangisidir?',textOf(r),r.lesson,opts(r.lesson,lessons,n)]);
+
+ const poems=[
+ ['Güneş doğdu tepeden,\\nKuşlar geçti neşeyle.','Sevinç'],['Yağmur düştü cama,\\nToprak koktu usulca.','Huzur'],['Minik kuşum uçup gitti,\\nPencerem sessiz kaldı.','Özlem'],['Bayrağım gökte dalgalanır,\\nYüreğim gururla çarpar.','Gurur'],['Karanlıkta ses duydum,\\nBattaniyeme sokuldum.','Korku'],
+ ['Tohum uyandı toprakta,\\nÇiçek açtı baharda.','Umut'],['Arkadaşım elimden tuttu,\\nYolum birden kolay oldu.','Dostluk'],['Deniz mavi, gök de mavi,\\nUçar martı kanat kanat.','Hayranlık'],['Kardan adam eriyince,\\nBiraz hüzün çöktü içime.','Üzüntü'],['Yeni kitabı açınca,\\nMerak sardı aklımı.','Merak']
+ ];
+ const poemEmo=poems.map(x=>x[1]);
+ G.siirbilgi.q=R.map((r,n)=>{const p=poems[n%10][0],count=p.split('\\n').length;return ['Şiir kaç dizeden oluşmaktadır?',p,count,[count,3,4,5].filter((x,k,a)=>a.indexOf(x)===k).concat([1,2]).slice(0,4)]}).map(q=>{if(!q[3].includes(q[2]))q[3][0]=q[2];return q});
+ G.siirduygu.q=R.map((r,n)=>{const p=poems[n%10];return ['Şiirin hissettirdiği duygu hangisidir?',p[0],p[1],opts(p[1],poemEmo,n)]});
+ G.siirsoru.q=R.map((r,n)=>{const p=poems[n%10],answer=p[0].split('\\n')[0];return ['Şiirin ilk dizesi hangisidir?',p[0],answer,opts(answer,poems.map(x=>x[0].split('\\n')[0]),n)]});
+ G.oykuyaz.q=R.map((r,n)=>['Bu öykünün olay cümlesi hangisi olmalıdır?',r.title+'\\nKahraman: '+r.name+'\\nYer: '+r.place,r.name+' '+r.action+'.',opts(r.name+' '+r.action+'.',actions.map(x=>r.name+' '+x+'.'),n)]);
+ G.oykutamam.q=R.map((r,n)=>['Öykünün sonuna en uygun cümleyi seç.',r.name+' '+r.place+' gitti ve '+r.action+'.',r.result+'.',opts(r.result+'.',results.map(x=>x+'.'),n)]);
+ const fantasy=['uçan bir bisikletle bulutlara çıktı','konuşan kalemle bir öykü yazdı','minik bir ejderhayla arkadaş oldu','Ay’a uzanan merdiveni tırmandı','denizin altında nefes alarak gezdi','görünmez pelerinini giydi','şarkı söyleyen çiçekleri dinledi','zaman makinesiyle geçmişe gitti','kanatlı bir gemiyle gökte yüzdü','oyuncakların canlandığı odaya girdi'];
+ G.hayalyaz.q=R.map((r,n)=>{const a=r.name+' '+fantasy[n%10]+'.';return ['Hangisi hayal ürünü bir cümledir?',r.name,a,[a,sentSafe(r),r.name+' okula yürüdü.',r.name+' kahvaltı yaptı.']]});
+ function sentSafe(r){return r.name+' '+r.place+' gitti.'}
+ const tongue=[['Bir berber bir berbere bre berber gel beraber bir berber dükkânı açalım demiş.','b'],['Dal sarkar, kartal kalkar; kartal kalkar, dal sarkar.','k'],['Şu köşe yaz köşesi, şu köşe kış köşesi.','ş'],['Kırk küp, kırkının da kulpu kırık küp.','k'],['Pişmiş aşa su katılmaz, taşmış tasa söz atılmaz.','ş'],['Mini mini minnacık, minik kuşum cıvıldar.','m'],['Fındıkçı Fikri fındıkları fırında kavurdu.','f'],['Sarı samanlar serildi, serçeler sırayla geldi.','s'],['Çatalca’da topal çoban çatal yapıp çatal satar.','ç'],['Mor menekşe, mavi mendil, minik martı.','m']];
+ G.tekerleme.q=R.map((r,n)=>{const x=tongue[n%10],card='Tekerleme Kartı: '+r.title+' • '+r.time+' • '+r.name+'\\n'+x[0];return ['Tekerlemede en sık duyulan ses hangisidir?',card,x[1],[x[1],'a','t','r'].filter((y,k,a)=>a.indexOf(y)===k).concat(['e','l']).slice(0,4)]});
+ const context=(r)=>r.visual+'\\n'+r.name+' • '+r.time+' • '+r.title;
+ G.gorselyorum.q=R.map((r,n)=>['Görselin anlattığı olay hangisidir?',context(r),r.action,opts(r.action,actions,n)]);
+ G.gorselbaslik.q=R.map((r,n)=>['Görsele en uygun başlığı seç.',context(r),r.title,opts(r.title,titles,n)]);
+ G.tebrik.q=R.map((r,n)=>{const a=achievements[n%10],card=r.title+' etkinliğinin ardından\\nSevgili '+recipients[n]+', '+a+' nedeniyle seni kutlarım. Başarılarının devamını dilerim. '+r.name+' • '+r.time;return ['Tebrik kartı hangi amaçla yazılmıştır?',card,a,opts(a,achievements,n)]});
+ G.eposta.q=R.map((r,n)=>{const x=safe[n%10],m=r.name+' '+r.time+' '+r.place+' şu durumla karşılaştı: '+x[0]+'. ('+r.title+')';return ['Bu durumda en güvenli davranış hangisidir?',m,x[1],opts(x[1],safe.map(x=>x[1]),n)]});
+ G.bedendili.q=R.map((r,n)=>{const e=emotions[n%10];return ['Beden dili hangi durumu anlatıyor?',r.name+' '+r.time+' '+r.place+' '+e[0]+'.',e[1],opts(e[1],emoAns,n)]});
+ G.duygu.q=R.map((r,n)=>{const e=emotions[(n+3)%10];return ['Cümledeki kişinin duygusunu seç.',r.name+' '+r.time+' '+r.place+' '+e[0]+'.',e[1],opts(e[1],emoAns,n)]});
+ G.sembol.q=R.map((r,n)=>{const x=symbols[n%20],card=r.name+' '+r.time+' '+r.place+' bu işareti gördü: '+x[0];return ['Sembolün anlamı nedir?',card,x[1],opts(x[1],symbols.map(x=>x[1]),n)]});
+ G.grafik.q=R.map((r,n)=>{const a=2+n%7,b=3+(n*2)%7,c=1+(n*3)%7,d=4+(n*4)%7,vals=[['Pazartesi',a],['Salı',b],['Çarşamba',c],['Perşembe',d]],max=[...vals].sort((x,y)=>y[1]-x[1])[0];const vis='Okuma Grafiği: '+r.title+' • '+r.name+' • '+r.time+'\\n'+vals.map(x=>x[0]+': '+'■'.repeat(x[1])).join('\\n');return ['Grafiğe göre en çok kitap okunan gün hangisidir?',vis,max[0],opts(max[0],vals.map(x=>x[0]),n)]});
+ G.metinturu.q=R.map((r,n)=>{const x=types[n%5],sample='Metin kartı: '+r.title+' • '+r.name+' • '+r.time+'\\n'+x[0];return ['Bu metnin türü hangisidir?',sample,x[1],opts(x[1],types.map(x=>x[1]),n)]});
+ G.siirbilgi.q=R.map((r,n)=>{let lines=poems[n%10][0].split('\\n');if(n%3>0)lines.push('Rüzgâr eser ince ince.');if(n%3>1)lines.push('Umut dolar sevincime.');const count=lines.length,card='Şiir: '+r.title+' • '+r.name+' • '+r.time+'\\n'+lines.join('\\n');return ['Şiir kaç dizeden oluşmaktadır?',card,count,[2,3,4,5]]});
+ G.siirduygu.q=R.map((r,n)=>{const p=poems[n%10],card='Şiir: '+r.title+' • '+r.name+' • '+r.time+'\\n'+p[0];return ['Şiirin hissettirdiği duygu hangisidir?',card,p[1],opts(p[1],poemEmo,n)]});
+ G.siirsoru.q=R.map((r,n)=>{const p=poems[n%10],answer=p[0].split('\\n')[0],card='Şiir: '+r.title+' • '+r.name+' • '+r.time+'\\n'+p[0];return ['Şiirin ilk dizesi hangisidir?',card,answer,opts(answer,poems.map(x=>x[0].split('\\n')[0]),n)]});
+ G.hayalyaz.q=R.map((r,n)=>{const a=r.name+' '+fantasy[n%10]+'.',card=r.name+' için hayal kartı: '+r.title+' • '+r.time;return ['Hangisi hayal ürünü bir cümledir?',card,a,[a,sentSafe(r),r.name+' okula yürüdü.',r.name+' kahvaltı yaptı.']]});
+})();
