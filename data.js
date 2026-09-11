@@ -748,3 +748,13 @@ G.tarihyazim.q.push(...[["Tarihin doğru yazıldığı seçeneği bul.","📅","
    return ['Büyük harflerin doğru kullanıldığı cümleyi seç.',correct.slice(0,-1),correct,[correct,lower,inner,correct.toLocaleUpperCase('tr-TR')]];
  });
 })();
+
+
+/* Yazım sorularında cevabı ele veren üst ipuçlarını kaldır */
+(()=>{
+ G.cumleyaz.q.forEach(q=>q[1]='Seçeneklerdeki cümlelerin başlangıcını ve sonunu karşılaştır.');
+ G.ozeladyazim.q.forEach(q=>q[1]='Özel adların büyük harfle başlayıp başlamadığını incele.');
+ G.tarihyazim.q.forEach(q=>q[1]='Gün, ay ve yılın yazılışını seçeneklerde karşılaştır.');
+ G.buyukharf.q.forEach(q=>q[1]='Büyük harflerin kullanıldığı yerleri dikkatle incele.');
+ G.dogruyazim.q.forEach(q=>q[1]='Kelimenin harflerini seçeneklerde dikkatle karşılaştır.');
+})();
