@@ -758,3 +758,87 @@ G.tarihyazim.q.push(...[["Tarihin doğru yazıldığı seçeneği bul.","📅","
  G.buyukharf.q.forEach(q=>q[1]='Büyük harflerin kullanıldığı yerleri dikkatle incele.');
  G.dogruyazim.q.forEach(q=>q[1]='Kelimenin harflerini seçeneklerde dikkatle karşılaştır.');
 })();
+
+
+/* Atasözleri ve Deyimler: ikinci sınıf düzeyinde 100 soruluk havuzlar */
+(()=>{
+ const proverbs=[
+ ['Damlaya damlaya göl olur.','Küçük birikimler zamanla büyür.'],
+ ['Bir elin nesi var, iki elin sesi var.','Birlikte çalışınca daha güçlü oluruz.'],
+ ['Ağaç yaşken eğilir.','İyi alışkanlıklar küçük yaşta kazanılır.'],
+ ['Ne ekersen onu biçersin.','Davranışlarımızın sonucunu yaşarız.'],
+ ['Sakla samanı, gelir zamanı.','Önemsiz görünen şeyler bir gün işe yarayabilir.'],
+ ['İşleyen demir ışıldar.','Çalışan kişi becerisini geliştirir.'],
+ ['Bugünün işini yarına bırakma.','Yapılacak işi zamanında bitirmeliyiz.'],
+ ['Ak akçe kara gün içindir.','Zor günler için para biriktirmeliyiz.'],
+ ['Dost kara günde belli olur.','Gerçek arkadaş zor zamanda yanında olur.'],
+ ['Gülü seven dikenine katlanır.','Sevdiğimiz şey için bazı zorluklara dayanırız.'],
+ ['Ayağını yorganına göre uzat.','Harcamalarımızı imkânımıza göre yapmalıyız.'],
+ ['Ev alma, komşu al.','İyi komşular çok değerlidir.'],
+ ['Birlikten kuvvet doğar.','Birlikte hareket etmek güç kazandırır.'],
+ ['Tatlı dil yılanı deliğinden çıkarır.','Güzel konuşmak zor işleri kolaylaştırır.'],
+ ['Bakarsan bağ olur, bakmazsan dağ olur.','İlgilenilen ve bakılan şey güzelleşir.'],
+ ['Erken kalkan yol alır.','İşe erken başlayan daha çok iş başarır.'],
+ ['Emek olmadan yemek olmaz.','Başarı için çalışmak gerekir.'],
+ ['Akıl akıldan üstündür.','Başkalarının düşüncelerinden yararlanmalıyız.'],
+ ['İki dinle, bir söyle.','Konuşmadan önce dikkatle dinlemeliyiz.'],
+ ['Son pişmanlık fayda etmez.','Bir işi yapmadan önce düşünmeliyiz.'],
+ ['Komşu komşunun külüne muhtaçtır.','Komşular birbirine ihtiyaç duyar.'],
+ ['Üzüm üzüme baka baka kararır.','İnsanlar birlikte oldukları kişilerden etkilenir.'],
+ ['Yalancının mumu yatsıya kadar yanar.','Yalanın gerçek olmadığı kısa sürede anlaşılır.'],
+ ['Güneş balçıkla sıvanmaz.','Açık bir gerçek saklanamaz.'],
+ ['Keskin sirke küpüne zarar.','Aşırı öfke en çok kişinin kendisine zarar verir.'],
+ ['Öfkeyle kalkan zararla oturur.','Öfkeyle verilen karar kötü sonuçlanabilir.'],
+ ['Acele işe şeytan karışır.','Acele yapılan işte hata çıkabilir.'],
+ ['Görünen köy kılavuz istemez.','Açıkça belli olan şey için açıklamaya gerek yoktur.'],
+ ['Sağlık varlıktan yeğdir.','Sağlık, zenginlikten daha değerlidir.'],
+ ['Nerede birlik, orada dirlik.','Birlik olan yerde huzur olur.'],
+ ['El elden üstündür.','Herkesten daha bilgili veya becerikli biri bulunabilir.'],
+ ['İyilik eden iyilik bulur.','İyi davranan kişi iyilikle karşılaşır.'],
+ ['Her çok azdan olur.','Büyük miktarlar küçük parçaların birikmesiyle oluşur.'],
+ ['Acele yürüyen yolda kalır.','Çok acele eden işini tamamlayamayabilir.'],
+ ['Ağaç yaprağıyla gürler.','İnsan yakınlarıyla güçlenir.'],
+ ['Lafla peynir gemisi yürümez.','Yalnız konuşmak yetmez, çalışmak gerekir.'],
+ ['Taşıma suyla değirmen dönmez.','Geçici çözümlerle işler sürekli yürümez.'],
+ ['Tek kanatla kuş uçmaz.','Büyük işler yardımlaşarak yapılır.'],
+ ['Bin bilsen de bir bilene danış.','Bilgili olsak da başkasının fikrini almalıyız.'],
+ ['Her işin başı sağlık.','Her şeyden önce sağlığımızı korumalıyız.'],
+ ['Vakit nakittir.','Zaman çok değerlidir.'],
+ ['Az olsun, öz olsun.','Az ama değerli olan daha iyidir.'],
+ ['İş insanın aynasıdır.','Bir kişinin yaptığı iş onun özelliklerini gösterir.'],
+ ['Dikensiz gül olmaz.','Güzel şeylerin bazı zorlukları olabilir.'],
+ ['Zahmetsiz rahmet olmaz.','Güzel sonuç için emek vermek gerekir.'],
+ ['Su küçüğün, söz büyüğün.','Küçüklere su, büyüklere konuşma önceliği verilir.'],
+ ['El el ile, değirmen yel ile.','İnsanlar yardımlaşarak işlerini başarır.'],
+ ['Baş başa vermeyince taş yerinden kalkmaz.','Zor işler birlikte düşünerek çözülür.'],
+ ['Mart kapıdan baktırır, kazma kürek yaktırır.','Mart ayında hava bazen çok soğuk olabilir.'],
+ ['Evdeki hesap çarşıya uymaz.','Yaptığımız plan her zaman düşündüğümüz gibi gitmeyebilir.']
+ ];
+ const idioms=[
+ ['Kulak vermek','Dikkatlice dinlemek'],['Etekleri zil çalmak','Çok sevinmek'],['Gözden kaybolmak','Görünmez olmak veya uzaklaşmak'],['Göz kulak olmak','Koruyup kollamak'],['Burnunda tütmek','Çok özlemek'],
+ ['Ağzı kulaklarına varmak','Çok mutlu olmak'],['Başı göğe ermek','Çok sevinip gururlanmak'],['İçi içine sığmamak','Çok heyecanlanmak'],['Gözleri parlamak','Sevincini bakışlarıyla belli etmek'],['Havalara uçmak','Çok sevinmek'],
+ ['Dört gözle beklemek','Çok isteyerek beklemek'],['Can kulağıyla dinlemek','Büyük bir dikkatle dinlemek'],['Göz atmak','Kısaca bakmak'],['Elinden tutmak','Yardım etmek'],['El ele vermek','Birlikte çalışmak'],
+ ['Yardım elini uzatmak','Yardıma ihtiyacı olana destek olmak'],['Kolları sıvamak','Bir işe başlamak için hazırlanmak'],['İşe koyulmak','Çalışmaya başlamak'],['Ter dökmek','Çok çalışıp emek vermek'],['Kafa yormak','Bir konu üzerinde çok düşünmek'],
+ ['Dili tutulmak','Şaşkınlıktan konuşamamak'],['Ağzı açık kalmak','Çok şaşırmak'],['Gözlerine inanamamak','Gördüğü şeye çok şaşırmak'],['Aklına gelmek','Birden hatırlamak veya düşünmek'],['Akıl danışmak','Birinden fikir istemek'],
+ ['Yola koyulmak','Gitmek üzere yola çıkmak'],['Yol almak','İlerlemek'],['İzini kaybetmek','Nereye gittiğini bulamamak'],['Yolunu gözlemek','Gelmesini özlemle beklemek'],['Ayaklarına kara sular inmek','Çok yürümekten yorulmak'],
+ ['Eli ayağına dolaşmak','Heyecandan ne yapacağını şaşırmak'],['Ödü kopmak','Çok korkmak'],['Yüreği ağzına gelmek','Birden çok korkmak'],['Tüyleri diken diken olmak','Korku veya heyecan duymak'],['Gözyaşlarına boğulmak','Çok ağlamak'],
+ ['Boynu bükülmek','Üzgün ve çaresiz kalmak'],['Surat asmak','Kızgınlığını veya üzüntüsünü yüzüyle göstermek'],['Burun kıvırmak','Bir şeyi beğenmemek'],['Dudak bükmek','Beğenmediğini belli etmek'],['Yüz çevirmek','İlgilenmemek veya uzak durmak'],
+ ['Tepesi atmak','Birden çok öfkelenmek'],['Dünyalar onun olmak','Çok mutlu olmak'],['İçi ısınmak','Birine karşı sevgi duymaya başlamak'],['İçini dökmek','Duygularını ve dertlerini anlatmak'],['Gönlünü almak','Kırdığı kişiyi yeniden sevindirmek'],
+ ['Göze girmek','Davranışlarıyla beğeni kazanmak'],['Gözünde büyütmek','Bir işi olduğundan zor sanmak'],['Sözünde durmak','Verdiği sözü yerine getirmek'],['İğneyle kuyu kazmak','Çok zor ve yavaş bir iş yapmak'],['Pireyi deve yapmak','Küçük bir olayı çok büyütmek']
+ ];
+ function choices(answer,pool,n){let out=[answer];for(let k=1;out.length<4;k++){const x=pool[(n+k*17)%pool.length];if(x!==answer&&!out.includes(x))out.push(x)}return out}
+ const pTexts=proverbs.map(x=>x[0]),pMeans=proverbs.map(x=>x[1]);
+ G.atasozu.q=proverbs.flatMap(([text,meaning],n)=>[
+  ['“'+text+'” atasözü ne anlatır?','Atasözünün verdiği öğüdü düşün.',meaning,choices(meaning,pMeans,n)],
+  ['“'+meaning+'” düşüncesini anlatan atasözü hangisidir?','Uygun atasözünü seç.',text,choices(text,pTexts,n)]
+ ]);
+ const dTexts=idioms.map(x=>x[0]),dMeans=idioms.map(x=>x[1]);
+ G.deyim.q=idioms.flatMap(([text,meaning],n)=>[
+  ['“'+text+'” deyimi ne demektir?','Deyimin cümleye kattığı anlamı düşün.',meaning,choices(meaning,dMeans,n)],
+  ['“'+meaning+'” anlamına gelen deyim hangisidir?','Uygun deyimi seç.',text,choices(text,dTexts,n)]
+ ]);
+ G.atasozudeyim.q=[
+  ...proverbs.map(([text],n)=>['“'+text+'” sözü hangisidir?','Sözün yapısını ve verdiği öğüdü düşün.','Atasözü',['Atasözü','Deyim','Bilmece','Tekerleme']]),
+  ...idioms.map(([text],n)=>['“'+text+'” sözü hangisidir?','Sözün gerçek anlamından farklı bir anlam taşıyıp taşımadığını düşün.','Deyim',['Deyim','Atasözü','Bilmece','Tekerleme']])
+ ];
+})();
