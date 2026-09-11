@@ -420,3 +420,99 @@ G.tarihyazim.q.push(...[["Tarihin doğru yazıldığı seçeneği bul.","📅","
  const utterances=[...statements.map(s=>s+'.'),...questions.map(s=>s+'?')].slice(0,100);
  G.tirnak.q=utterances.map((s,n)=>{const speaker=names[n%20],ans=speaker+', “'+s+'” dedi.';return ['Aktarılan sözün tırnak içinde doğru yazıldığı seçeneği bul.',speaker+' şöyle dedi: '+s,ans,[ans,speaker+', '+s+' dedi.','“'+speaker+', '+s+'” dedi.',speaker+', ‘'+s+' dedi.’']]});
 })();
+
+
+/* Cümle Bilgisi: on bir oyun için 100 soruluk havuz */
+(()=>{
+ const names=['Ali','Ayşe','Ece','Emir','Elif','Mert','Zeynep','Arda','Defne','Kerem','Ceren','Ömer','Sude','Berk','İpek','Can','Selin','Yağız','Melek','Eren'];
+ const acts=[
+  {place:'okulda',obj:'kitap',verb:'okudu'},
+  {place:'parkta',obj:'top',verb:'oynadı'},
+  {place:'evde',obj:'resim',verb:'yaptı'},
+  {place:'bahçede',obj:'çiçek',verb:'suladı'},
+  {place:'mutfakta',obj:'kek',verb:'yaptı'}
+ ];
+ const times=['dün','bugün','sabah','öğleden sonra','akşam'];
+ const rec=[];
+ names.forEach((name,ni)=>acts.forEach((a,ai)=>rec.push({name,...a,time:times[(ni+ai)%5]})));
+ const sentence=r=>r.name+' '+r.time+' '+r.place+' '+r.obj+' '+r.verb+'.';
+ const four=(answer,a,b,c)=>[...new Set([answer,a,b,c])].slice(0,4);
+ G.cumleyaz.q=rec.map(r=>{const s=sentence(r),low=s[0].toLocaleLowerCase('tr-TR')+s.slice(1),bare=s.slice(0,-1);return ['Doğru yazılmış cümleyi seç.',bare,s,[s,low,bare,bare+'?']]});
+
+ const connectors=['ve','ama','bu yüzden','veya'];
+ G.baglama.q=rec.map((r,n)=>{
+   let left,right,ans;
+   if(n%4===0){left=r.name+' '+r.time+' '+r.obj+' '+r.verb;right='arkadaşı onu dinledi';ans='ve'}
+   else if(n%4===1){left=r.name+' '+r.place+' yoruldu';right='çalışmaya devam etti';ans='ama'}
+   else if(n%4===2){left=r.time+' yağmur başladı';right=r.name+' '+r.place+' şemsiyesini açtı';ans='bu yüzden'}
+   else{left=r.name+' '+r.time+' süt';right='ayran içebilir';ans='veya'}
+   return ['Boşluğa uygun bağlantı sözünü seç.',left+' ... '+right,ans,four(ans,...connectors.filter(x=>x!==ans).slice(0,3))];
+ });
+
+ const verbs=acts.map(x=>x.verb);
+ G.eksik.q=rec.map((r,n)=>['Cümleyi uygun sözcükle tamamla.',r.name+' '+r.time+' '+r.place+' '+r.obj+' ... .',r.verb,four(r.verb,verbs[(n+1)%5],verbs[(n+2)%5],'uyudu')]);
+ G.eksik.q=G.eksik.q.map(q=>{let o=[...new Set(q[3])];for(const x of ['geldi','koştu','çizdi','aldı'])if(o.length<4&&!o.includes(x))o.push(x);q[3]=o.slice(0,4);return q});
+
+ G.kuralli.q=rec.map(r=>{const s=sentence(r),words=[r.verb,r.obj,r.name,r.place,r.time].join(' / ');return ['Sözcüklerle kurallı bir cümle oluştur.',words,s,[s,r.verb[0].toLocaleUpperCase('tr-TR')+r.verb.slice(1)+' '+r.name+' '+r.obj+'.',r.place[0].toLocaleUpperCase('tr-TR')+r.place.slice(1)+' '+r.name+' '+r.verb+'.',r.name+' '+r.verb+' '+r.obj+'?']]});
+
+ const qforms=rec.map((r,n)=>{
+   if(n%5===0)return r.name+' '+r.place+' ne yaptı?';
+   if(n%5===1)return r.name+' '+r.obj+' nerede '+r.verb+'?';
+   if(n%5===2)return r.name+' '+r.place+' ne zaman '+r.verb+'?';
+   if(n%5===3)return r.name+' mi '+r.obj+' '+r.verb+'?';
+   return r.name+' '+r.obj+' '+r.verb+' mi?';
+ });
+ G.sorucumle.q=qforms.map((s,n)=>['Hangisi soru cümlesidir?',s,s,[s,s.slice(0,-1)+'.',sentence(rec[(n+7)%100]),'Ne güzel bir gün!']]);
+
+ const states=[
+  {sent:'çok sevindi',answer:'Mutluluk',wrong:['Üzüntü','Korku','Öfke']},
+  {sent:'oyuncağı kırılınca üzüldü',answer:'Üzüntü',wrong:['Mutluluk','Şaşkınlık','Gurur']},
+  {sent:'yüksek sesten korktu',answer:'Korku',wrong:['Sevinç','Rahatlık','Merak']},
+  {sent:'sürprizi görünce şaşırdı',answer:'Şaşkınlık',wrong:['Öfke','Üzüntü','Yorgunluk']},
+  {sent:'başardığı için gururlandı',answer:'Gurur',wrong:['Korku','Üzüntü','Öfke']}
+ ];
+ G.anlamcumle.q=rec.map((r,n)=>{const st=states[n%5];return ['Cümlenin anlattığı duyguyu seç.',r.name+' '+st.sent+'.',st.answer,[st.answer,...st.wrong]]});
+
+ G.kimnenerede.q=rec.map((r,n)=>{
+   const s=sentence(r);
+   if(n%3===0)return ['“'+s+'” cümlesinde kim?',s,r.name,[r.name,r.place,r.obj,r.verb]];
+   if(n%3===1)return ['“'+s+'” cümlesinde nerede?',s,r.place,[r.place,r.name,r.obj,r.time]];
+   return ['“'+s+'” cümlesinde ne?',s,r.obj,[r.obj,r.name,r.place,r.time]];
+ });
+
+ G.besn1k.q=rec.map((r,n)=>{
+   const s=sentence(r),k=n%5;
+   if(k===0)return ['Cümlede işi yapan kimdir?',s,r.name,[r.name,r.place,r.time,r.obj]];
+   if(k===1)return ['Olay nerede gerçekleşmiştir?',s,r.place,[r.place,r.name,r.time,r.obj]];
+   if(k===2)return ['Olay ne zaman gerçekleşmiştir?',s,r.time,[r.time,r.name,r.place,r.obj]];
+   if(k===3)return ['Cümlede adı geçen varlık nedir?',s,r.obj,[r.obj,r.name,r.place,r.time]];
+   return ['Cümlede yapılan iş hangisidir?',s,r.verb,[r.verb,r.obj,r.place,r.time]];
+ });
+
+ const causes=[
+  {cause:'alarmın çalmaması',clause:'alarm çalmadığı',result:'okula geç kaldı'},
+  {cause:'yağmurun yağması',clause:'yağmur yağdığı',result:'şemsiyesini açtı'},
+  {cause:'düzenli çalışması',clause:'düzenli çalıştığı',result:'sınavda başarılı oldu'},
+  {cause:'çok acıkması',clause:'çok acıktığı',result:'yemek yedi'},
+  {cause:'havanın soğuması',clause:'hava soğuduğu',result:'montunu giydi'}
+ ];
+ G.sebep.q=rec.map((r,n)=>{const x=causes[n%5],s=r.name+' '+x.clause+' için '+x.result+'.';if(n%2===0)return ['Cümledeki sebebi bul.',s,x.cause,[x.cause,x.result,'oyun oynaması','erken yatması']];return ['Cümledeki sonucu bul.',s,x.result,[x.result,x.cause,'kitap okuması','arkadaşını görmesi']]});
+
+ const comps=[
+  {a:'tavşan',b:'kaplumbağa',prop:'hızlı',s:'Tavşan kaplumbağadan daha hızlıdır.'},
+  {a:'fil',b:'kedi',prop:'büyük',s:'Fil kediden daha büyüktür.'},
+  {a:'kalem',b:'silgi',prop:'uzun',s:'Kalem silgiden daha uzundur.'},
+  {a:'kış',b:'yaz',prop:'soğuk',s:'Kış yazdan daha soğuktur.'},
+  {a:'uçak',b:'otobüs',prop:'hızlı',s:'Uçak otobüsten daha hızlıdır.'}
+ ];
+ G.karsilastirma.q=rec.map((r,n)=>{const x=comps[n%5],s=r.name+' şöyle dedi: “'+x.s+'”';return ['Karşılaştırılan özelliği bul.',s,x.prop,[x.prop,'renk','tat','ses']]});
+
+ const sims=[
+  {text:'aslan gibi cesur',thing:'aslana'},
+  {text:'pamuk gibi yumuşak',thing:'pamuğa'},
+  {text:'arı gibi çalışkan',thing:'arıya'},
+  {text:'kar gibi beyaz',thing:'kara'},
+  {text:'su gibi berrak',thing:'suya'}
+ ];
+ G.benzetme.q=rec.map((r,n)=>{const x=sims[n%5],s=r.name+' '+x.text+'tır.';return ['Cümlede '+r.name+' neye benzetilmiştir?',s,x.thing,[x.thing,'ağaca','taşa','toprağa']]});
+})();
