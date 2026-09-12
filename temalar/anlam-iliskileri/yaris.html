@@ -27,13 +27,13 @@ const POOL_SIZE=125,ROUND_SIZE=15;
 function choices(answer,items,seed){const out=[answer];for(let k=1;out.length<4&&k<items.length*3;k++){const x=items[(seed+k*17)%items.length];if(x!==answer&&!out.includes(x))out.push(x)}return out}
 function buildPool(){
  const out=[],synWords=SYN.flat(),antWords=ANT.flat(),defWords=DEF.map(x=>x[1]);
- for(let i=0;i<42;i++){const p=SYN[i%SYN.length],flip=i%2,word=p[flip?1:0],answer=p[flip?0:1];out.push({q:"“"+word+"” kelimesinin eş anlamlısı hangisidir?",v:"Aynı anlamı taşıyan kelimeyi bul.",a:answer,o:choices(answer,synWords,i)});}
- for(let i=0;i<42;i++){const p=ANT[i%ANT.length],flip=i%2,word=p[flip?1:0],answer=p[flip?0:1];out.push({q:"“"+word+"” kelimesinin zıt anlamlısı hangisidir?",v:"Karşıt anlamı taşıyan kelimeyi bul.",a:answer,o:choices(answer,antWords,i+7)});}
- for(let i=0;i<41;i++){const p=DEF[i%DEF.length],answer=p[1];out.push({q:"“"+p[0]+"” tanımına uygun kelime hangisidir?",v:"Tanımı dikkatle oku.",a:answer,o:choices(answer,defWords,i+13)});}
+ for(let i=0;i<42;i++){const p=SYN[i%SYN.length],flip=i%2,word=p[flip?1:0],answer=p[flip?0:1];out.push(["“"+word+"” kelimesinin eş anlamlısı hangisidir?","Aynı anlamı taşıyan kelimeyi bul.",answer,choices(answer,synWords,i)]);}
+ for(let i=0;i<42;i++){const p=ANT[i%ANT.length],flip=i%2,word=p[flip?1:0],answer=p[flip?0:1];out.push(["“"+word+"” kelimesinin zıt anlamlısı hangisidir?","Karşıt anlamı taşıyan kelimeyi bul.",answer,choices(answer,antWords,i+7)]);}
+ for(let i=0;i<41;i++){const p=DEF[i%DEF.length],answer=p[1];out.push(["“"+p[0]+"” tanımına uygun kelime hangisidir?","Tanımı dikkatle oku.",answer,choices(answer,defWords,i+13)]);}
  return out;
 }
 function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-const pool=buildPool(), historyKey="anlam-iliskileri-yaris-havuzu-v1";
+const pool=buildPool(), historyKey="anlam-iliskileri-yaris-havuzu-v2";
 function loadDeck(){let s;try{s=JSON.parse(localStorage.getItem(historyKey))}catch(e){}if(!s||!Array.isArray(s.order)||s.order.length!==POOL_SIZE||!Number.isInteger(s.cursor))s={order:shuffle([...Array(POOL_SIZE).keys()]),cursor:0,cycle:1};return s}
 function takeRound(){let s=loadDeck(),ids=[];while(ids.length<ROUND_SIZE){if(s.cursor>=POOL_SIZE){s={order:shuffle([...Array(POOL_SIZE).keys()]),cursor:0,cycle:(s.cycle||1)+1}}const take=Math.min(ROUND_SIZE-ids.length,POOL_SIZE-s.cursor);ids.push(...s.order.slice(s.cursor,s.cursor+take));s.cursor+=take}localStorage.setItem(historyKey,JSON.stringify(s));return {questions:ids.map(i=>pool[i]),state:s}}
 let round=[],players=[],finished=false;
