@@ -11,64 +11,53 @@
 </head>
 <body><main class="shell">
 <header class="top"><div class="brand">🏀 Dila Öğretmen'in Oyun Atölyesi</div><a class="back" href="./">← Türkçe Oyunları</a></header>
-<section class="hero"><h1>Harf ve Hece Basketbol Yarışı</h1><p>İki oyuncu aynı 15 soruyu kendi hızında çözer. Her doğru cevap bir basket kazandırır; en çok basket atan maçı kazanır.</p><div class="rules"><span>🔤 Harf bilgisi</span><span>👏 Hece bilgisi</span><span>✅ Doğru = 1 basket</span><span>⏱️ Beklemek yok</span></div></section>
-<section class="start" id="startScreen"><div class="starticon">🏀⛹️</div><h2>Sahaya çıkmaya hazır mısınız?</h2><p>Her oyuncunun soru ve cevap alanı ayrıdır. Bir oyuncu düşünürken diğeri yeni sorusuna geçebilir.</p><button class="startbtn" id="startBtn">Maçı Başlat 🏆</button></section>
+<section class="hero"><h1>Harf ve Hece Basketbol Yarışı</h1><p>İki oyuncu kendi hızında ilerler. 5 soruyu önce tamamlayan kupayı kazanır; her yeni turda havuzdan yeni sorular gelir.</p><div class="rules"><span>🔤 Harf bilgisi</span><span>👏 Hece bilgisi</span><span>🎯 5 soru</span><span>🗃️ 125 soruluk havuz</span><span>🏆 Önce bitiren kazanır</span></div></section>
+<section class="start" id="startScreen"><div class="starticon">🏀⛹️</div><h2>Sahaya çıkmaya hazır mısınız?</h2><p>Her oyuncunun soru ve cevap alanı ayrıdır. Soruların sırası farklıdır; bir oyuncu düşünürken diğeri ilerleyebilir.</p><p class="note" id="poolInfo"></p><button class="startbtn" id="startBtn">Maçı Başlat 🏆</button></section>
 <section class="game" id="game">
 <div class="scoreboard"><div class="score">🔵 1. Oyuncu<b id="score1">0</b>basket</div><div class="clock">🏀</div><div class="score">🔴 2. Oyuncu<b id="score2">0</b>basket</div></div>
 <div class="courts">
-<article class="player" style="--pc:var(--blue)"><div class="court"><span class="ball" id="ball1">🏀</span><span class="hoop" aria-label="Basketbol potası">🧺</span></div><div class="content"><div class="playerhead"><h2>🔵 1. Oyuncu</h2><span class="round" id="round1">Soru 1 / 15</span></div><div class="question" id="question1"></div><div class="answers" id="answers1"></div><div class="status" id="status1"></div></div></article>
-<article class="player" style="--pc:var(--red)"><div class="court"><span class="ball" id="ball2">🏀</span><span class="hoop" aria-label="Basketbol potası">🧺</span></div><div class="content"><div class="playerhead"><h2>🔴 2. Oyuncu</h2><span class="round" id="round2">Soru 1 / 15</span></div><div class="question" id="question2"></div><div class="answers" id="answers2"></div><div class="status" id="status2"></div></div></article>
+<article class="player" style="--pc:var(--blue)"><div class="court"><span class="ball" id="ball1">🏀</span><span class="hoop" aria-label="Basketbol potası">🧺</span></div><div class="content"><div class="playerhead"><h2>🔵 1. Oyuncu</h2><span class="round" id="round1">Soru 1 / 5</span></div><div class="question" id="question1"></div><div class="answers" id="answers1"></div><div class="status" id="status1"></div></div></article>
+<article class="player" style="--pc:var(--red)"><div class="court"><span class="ball" id="ball2">🏀</span><span class="hoop" aria-label="Basketbol potası">🧺</span></div><div class="content"><div class="playerhead"><h2>🔴 2. Oyuncu</h2><span class="round" id="round2">Soru 1 / 5</span></div><div class="question" id="question2"></div><div class="answers" id="answers2"></div><div class="status" id="status2"></div></div></article>
 </div></section>
-<section class="result" id="result"></section><div class="note">İki oyuncu aynı soru dizisini bağımsız olarak tamamlar.</div>
+<section class="result" id="result"></section><div class="note">İki oyuncu aynı 5 soruluk grubu farklı sırada ve bağımsız olarak tamamlar.</div>
 </main>
+<script src="data.js?v=35"></script>
 <script>
-const bank=[
- {q:'“Kalem” kelimesinde kaç harf vardır?',a:'5',o:['4','5','6','7']},
- {q:'Türk alfabesinde kaç harf vardır?',a:'29',o:['26','28','29','30']},
- {q:'Hangisi ünlü bir harftir?',a:'ö',o:['k','m','ö','ş']},
- {q:'Hangisi ünsüz bir harftir?',a:'ç',o:['a','e','ü','ç']},
- {q:'“Kelebek” kelimesinde kaç ünlü harf vardır?',a:'3',o:['2','3','4','5']},
- {q:'Alfabetik sırada “g” harfinden sonra hangisi gelir?',a:'ğ',o:['h','f','ğ','ı']},
- {q:'“Oyuncak” kelimesinin ilk harfi hangisidir?',a:'o',o:['y','o','a','k']},
- {q:'“Okul” kelimesi kaç hecelidir?',a:'2',o:['1','2','3','4']},
- {q:'“Öğretmen” kelimesi kaç hecelidir?',a:'3',o:['2','3','4','5']},
- {q:'“Arkadaşlık” kelimesi kaç hecelidir?',a:'4',o:['2','3','4','5']},
- {q:'“Kitaplık” kelimesi hangisinde doğru hecelenmiştir?',a:'ki-tap-lık',o:['kit-ap-lık','ki-ta-plık','ki-tap-lık','kitap-lık']},
- {q:'“İlkokul” kelimesi hangisinde doğru hecelenmiştir?',a:'il-ko-kul',o:['ilk-o-kul','il-ko-kul','il-kok-ul','ilkok-ul']},
- {q:'Her hecede kaç ünlü harf bulunur?',a:'1',o:['0','1','2','3']},
- {q:'“Bilgisayar” kelimesi kaç hecelidir?',a:'4',o:['3','4','5','6']},
- {q:'“o-yun-cak” heceleri birleşince hangi kelime oluşur?',a:'oyuncak',o:['oyun','oyuncu','oyuncak','oynak']}
-];
-let questions=[],idx=[0,0],scores=[0,0],answered=[false,false],finished=[false,false];
+const GAME_IDS=["alfabe","unlu","harfsayisi","hecesayisi","heceayir"],POOL_SIZE=125,ROUND_SIZE=5;
 const $=s=>document.querySelector(s);
-function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function buildPool(){const out=[],seen=new Set();for(let n=0;out.length<POOL_SIZE&&n<200;n++){for(const id of GAME_IDS){const x=G[id]&&G[id].q[n];if(!x)continue;const q={q:x[0],v:x[1],a:String(x[2]),o:x[3].map(String)};const key=JSON.stringify([q.q,q.v,q.a]);if(!seen.has(key)){seen.add(key);out.push(q);if(out.length===POOL_SIZE)break}}}return out}
+const bank=buildPool(),historyKey="harf-hece-basketbol-havuzu-v3";
+function loadDeck(){let s;try{s=JSON.parse(localStorage.getItem(historyKey))}catch(e){}if(!s||!Array.isArray(s.order)||s.order.length!==POOL_SIZE||!Number.isInteger(s.cursor))s={order:shuffle([...Array(POOL_SIZE).keys()]),cursor:0,cycle:1};return s}
+function takeRound(){let s=loadDeck(),ids=[];while(ids.length<ROUND_SIZE){if(s.cursor>=POOL_SIZE)s={order:shuffle([...Array(POOL_SIZE).keys()]),cursor:0,cycle:(s.cycle||1)+1};const count=Math.min(ROUND_SIZE-ids.length,POOL_SIZE-s.cursor);ids.push(...s.order.slice(s.cursor,s.cursor+count));s.cursor+=count}localStorage.setItem(historyKey,JSON.stringify(s));return ids.map(i=>bank[i])}
+let questions=[],orders=[[],[]],idx=[0,0],scores=[0,0],answered=[false,false],winner=-1;
+function updatePoolNote(){const s=loadDeck(),left=POOL_SIZE-s.cursor;$("#poolInfo").textContent="Havuzda "+left+" kullanılmamış soru var. Sorular havuz bitene kadar tekrarlanmaz."}
 function start(){
- questions=shuffle(bank);idx=[0,0];scores=[0,0];answered=[false,false];finished=[false,false];
- $('#score1').textContent=$('#score2').textContent='0';$('#result').classList.remove('on');$('#startScreen').style.display='none';$('#game').classList.add('on');
- document.querySelectorAll('.player').forEach(x=>x.classList.remove('finished'));render(0);render(1);scrollTo({top:0,behavior:'smooth'});
+ questions=takeRound();orders=[shuffle([...Array(ROUND_SIZE).keys()]),shuffle([...Array(ROUND_SIZE).keys()])];idx=[0,0];scores=[0,0];answered=[false,false];winner=-1;
+ $("#score1").textContent=$("#score2").textContent="0";$("#result").classList.remove("on");$("#startScreen").style.display="none";$("#game").classList.add("on");
+ document.querySelectorAll(".player").forEach(x=>x.classList.remove("finished"));render(0);render(1);scrollTo({top:0,behavior:"smooth"});
 }
 function render(p){
- if(idx[p]>=15){finishPlayer(p);return}
- const n=p+1,q=questions[idx[p]],opts=shuffle(q.o),box=$('#answers'+n);answered[p]=false;
- $('#round'+n).textContent='Soru '+(idx[p]+1)+' / 15';$('#question'+n).textContent=q.q;$('#status'+n).textContent='Cevabını seç';
- box.innerHTML=opts.map(x=>'<button class="answer">'+x+'</button>').join('');
- [...box.children].forEach((b,i)=>b.onclick=()=>choose(p,b,opts[i],q.a));
+ if(winner>=0)return;if(idx[p]>=ROUND_SIZE){finishPlayer(p);return}
+ const n=p+1,q=questions[orders[p][idx[p]]],opts=shuffle(q.o),box=$("#answers"+n);answered[p]=false;
+ $("#round"+n).textContent="Soru "+(idx[p]+1)+" / "+ROUND_SIZE;$("#question"+n).textContent=q.q;$("#status"+n).textContent="Cevabını seç";
+ box.innerHTML=opts.map(()=>'<button class="answer"></button>').join("");
+ [...box.children].forEach((b,i)=>{b.textContent=opts[i];b.onclick=()=>choose(p,b,opts[i],q.a)});
 }
 function choose(p,btn,value,right){
- if(answered[p]||finished[p])return;answered[p]=true;const n=p+1,box=$('#answers'+n);
- [...box.children].forEach(b=>{b.disabled=true;if(b.textContent===right)b.classList.add('good')});
- if(value===right){scores[p]++;$('#score'+n).textContent=scores[p];btn.classList.add('good');$('#status'+n).textContent='🏀 Basket! Yeni soru geliyor.';const ball=$('#ball'+n);ball.classList.remove('shoot');void ball.offsetWidth;ball.classList.add('shoot')}
- else{btn.classList.add('bad');$('#status'+n).textContent='💡 Basket yok. Doğru cevap: '+right}
- setTimeout(()=>{idx[p]++;render(p)},800);
+ if(answered[p]||winner>=0)return;answered[p]=true;const n=p+1,box=$("#answers"+n);
+ [...box.children].forEach(b=>{b.disabled=true;if(String(b.textContent)===String(right))b.classList.add("good")});
+ const good=String(value)===String(right);
+ if(good){scores[p]++;$("#score"+n).textContent=scores[p];btn.classList.add("good");$("#status"+n).textContent="🏀 Basket! İlerle.";const ball=$("#ball"+n);ball.classList.remove("shoot");void ball.offsetWidth;ball.classList.add("shoot")}
+ else{btn.classList.add("bad");$("#status"+n).textContent="💡 Doğru cevap: "+right}
+ setTimeout(()=>{if(winner>=0)return;idx[p]++;render(p)},good?350:900);
 }
 function finishPlayer(p){
- if(finished[p])return;finished[p]=true;const n=p+1;$('#answers'+n).innerHTML='';$('#round'+n).textContent='15 / 15 tamamlandı';$('#question'+n).textContent='Maçını tamamladın!';$('#status'+n).textContent=finished[1-p]?'Sonuç hazırlanıyor…':'Diğer oyuncu devam ediyor.';$('#answers'+n).closest('.player').classList.add('finished');
- if(finished[0]&&finished[1])finishGame();
+ if(winner>=0)return;winner=p;const n=p+1;$("#round"+n).textContent="5 / 5 tamamlandı";$("#question"+n).textContent="Kupayı kazandın!";$("#status"+n).textContent="🏆 Yarışı ilk sen bitirdin!";document.querySelectorAll(".answer").forEach(b=>b.disabled=true);finishGame();
 }
 function finishGame(){
- const winner=scores[0]===scores[1]?-1:scores[0]>scores[1]?0:1,title=winner<0?'🤝 Maç Berabere!':winner===0?'🔵 1. Oyuncu Kazandı!':'🔴 2. Oyuncu Kazandı!';
- $('#result').classList.add('on');$('#result').innerHTML='<div style="font-size:58px">🏆🏀</div><h2>'+title+'</h2><div class="compare"><div><b>'+scores[0]+'</b><small>1. Oyuncu basket</small></div><div><b>'+scores[1]+'</b><small>2. Oyuncu basket</small></div></div><button class="again" id="again">Tekrar Maç Yap</button>';
- $('#again').onclick=start;$('#result').scrollIntoView({behavior:'smooth',block:'center'});
+ const n=winner+1;$("#result").classList.add("on");$("#result").innerHTML='<div style="font-size:70px">🏆🏀</div><h2>'+(winner===0?"🔵":"🔴")+" "+n+'. Oyuncu Kupayı Kazandı!</h2><div class="compare"><div><b>'+scores[0]+'</b><small>1. Oyuncu basket</small></div><div><b>'+scores[1]+'</b><small>2. Oyuncu basket</small></div></div><p>5 soruyu ilk tamamlayan oyuncu yarışı kazandı.</p><button class="again" id="again">Yeni Sorularla Oyna</button>';
+ $("#again").onclick=()=>{updatePoolNote();start()};$("#result").scrollIntoView({behavior:"smooth",block:"center"});
 }
-$('#startBtn').onclick=start;
+$("#startBtn").onclick=start;updatePoolNote();
 </script></body></html>
